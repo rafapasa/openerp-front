@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:front_openerp/data/services/api_service.dart';
+import 'package:openerp_front/data/services/api_service.dart';
 
 /// Fake de [ApiService] para testes de PedidoService (sem rede e sem Hive).
 class FakeApiService implements ApiService {

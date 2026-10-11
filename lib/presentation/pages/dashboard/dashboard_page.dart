@@ -2,8 +2,8 @@
 // Refatorado eTools - Dashboard responsivo Web + Mobile
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:front_openerp/data/models/enums.dart';
-import 'package:front_openerp/presentation/providers/providers.dart';
+import 'package:openerp_front/data/models/enums.dart';
+import 'package:openerp_front/presentation/providers/providers.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 

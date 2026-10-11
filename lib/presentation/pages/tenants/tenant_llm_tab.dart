@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:front_openerp/core/helpers/snack_helper.dart';
-import 'package:front_openerp/data/models/tenant_llm_config.dart';
-import 'package:front_openerp/data/models/tenant_model.dart';
-import 'package:front_openerp/presentation/providers/tenant_provider.dart';
-import 'package:front_openerp/presentation/theme/app_colors.dart';
-import 'package:front_openerp/presentation/widgets/app_section_card.dart';
+import 'package:openerp_front/core/helpers/snack_helper.dart';
+import 'package:openerp_front/data/models/tenant_llm_config.dart';
+import 'package:openerp_front/data/models/tenant_model.dart';
+import 'package:openerp_front/presentation/providers/tenant_provider.dart';
+import 'package:openerp_front/presentation/theme/app_colors.dart';
+import 'package:openerp_front/presentation/widgets/app_section_card.dart';
 import 'package:provider/provider.dart';
 
 class TenantLlmTab extends StatefulWidget {

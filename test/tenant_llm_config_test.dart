@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:front_openerp/data/models/tenant_llm_config.dart';
+import 'package:openerp_front/data/models/tenant_llm_config.dart';
 
 void main() {
   test('fromJson preenche prompts e regras', () {

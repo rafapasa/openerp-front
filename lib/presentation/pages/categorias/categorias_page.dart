@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:front_openerp/data/models/categoria_model.dart';
-import 'package:front_openerp/data/services/categoria_service.dart';
+import 'package:openerp_front/data/models/categoria_model.dart';
+import 'package:openerp_front/data/services/categoria_service.dart';
 import 'package:provider/provider.dart';
 
 import '../../theme/app_colors.dart';

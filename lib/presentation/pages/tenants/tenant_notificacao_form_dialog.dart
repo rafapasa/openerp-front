@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:front_openerp/presentation/widgets/viewport_box.dart';
-import 'package:front_openerp/data/models/tenant_notificacao_model.dart';
-import 'package:front_openerp/presentation/providers/tenant_provider.dart';
-import 'package:front_openerp/presentation/theme/app_colors.dart';
-import 'package:front_openerp/presentation/widgets/app_section_card.dart';
+import 'package:openerp_front/presentation/widgets/viewport_box.dart';
+import 'package:openerp_front/data/models/tenant_notificacao_model.dart';
+import 'package:openerp_front/presentation/providers/tenant_provider.dart';
+import 'package:openerp_front/presentation/theme/app_colors.dart';
+import 'package:openerp_front/presentation/widgets/app_section_card.dart';
 import 'package:provider/provider.dart';
 
 Future<TenantNotificacaoModel?> showTenantNotificacaoFormDialog(

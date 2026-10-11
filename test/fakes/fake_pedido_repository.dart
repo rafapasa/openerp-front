@@ -1,5 +1,5 @@
-import 'package:front_openerp/data/models/models.dart';
-import 'package:front_openerp/data/repositories/pedido_repository.dart';
+import 'package:openerp_front/data/models/models.dart';
+import 'package:openerp_front/data/repositories/pedido_repository.dart';
 
 class FakePedidoRepository implements PedidoRepository {
   final List<PedidoModel> store;

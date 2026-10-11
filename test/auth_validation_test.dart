@@ -8,10 +8,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 
-import 'package:front_openerp/data/repositories/auth_repository.dart';
-import 'package:front_openerp/data/repositories/local_storage.dart';
-import 'package:front_openerp/data/services/api_service.dart';
-import 'package:front_openerp/data/services/auth_service.dart';
+import 'package:openerp_front/data/repositories/auth_repository.dart';
+import 'package:openerp_front/data/repositories/local_storage.dart';
+import 'package:openerp_front/data/services/api_service.dart';
+import 'package:openerp_front/data/services/auth_service.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:front_openerp/core/helpers/json_helper.dart';
-import 'package:front_openerp/data/services/api_service.dart';
-import 'package:front_openerp/presentation/theme/app_colors.dart';
+import 'package:openerp_front/core/helpers/json_helper.dart';
+import 'package:openerp_front/data/services/api_service.dart';
+import 'package:openerp_front/presentation/theme/app_colors.dart';
 import 'package:provider/provider.dart';
 
 class ContaPage extends StatefulWidget {

@@ -1,9 +1,9 @@
 // lib/presentation/pages/pedidos/pedidos_kanban.dart
 import 'package:flutter/material.dart';
-import 'package:front_openerp/data/models/models.dart';
-import 'package:front_openerp/presentation/pages/pedidos/pagamento_pedido_dialog.dart';
-import 'package:front_openerp/presentation/pages/pedidos/pedido_detalhe_modal.dart';
-import 'package:front_openerp/presentation/providers/pedido_provider.dart';
+import 'package:openerp_front/data/models/models.dart';
+import 'package:openerp_front/presentation/pages/pedidos/pagamento_pedido_dialog.dart';
+import 'package:openerp_front/presentation/pages/pedidos/pedido_detalhe_modal.dart';
+import 'package:openerp_front/presentation/providers/pedido_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 

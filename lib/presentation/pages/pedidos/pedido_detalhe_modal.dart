@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:front_openerp/presentation/widgets/viewport_box.dart';
-import 'package:front_openerp/core/helpers/launch_url.dart';
-import 'package:front_openerp/core/helpers/snack_helper.dart';
-import 'package:front_openerp/data/models/models.dart';
-import 'package:front_openerp/presentation/providers/providers.dart';
-import 'package:front_openerp/presentation/theme/app_colors.dart';
-import 'package:front_openerp/presentation/widgets/app_section_card.dart';
+import 'package:openerp_front/presentation/widgets/viewport_box.dart';
+import 'package:openerp_front/core/helpers/launch_url.dart';
+import 'package:openerp_front/core/helpers/snack_helper.dart';
+import 'package:openerp_front/data/models/models.dart';
+import 'package:openerp_front/presentation/providers/providers.dart';
+import 'package:openerp_front/presentation/theme/app_colors.dart';
+import 'package:openerp_front/presentation/widgets/app_section_card.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:front_openerp/presentation/pages/pedidos/pagamento_pedido_dialog.dart';
+import 'package:openerp_front/presentation/pages/pedidos/pagamento_pedido_dialog.dart';
 
 Future<void> showPedidoDetalheModal(BuildContext context, int pedidoId) {
   final isWide = MediaQuery.of(context).size.width >= 720;

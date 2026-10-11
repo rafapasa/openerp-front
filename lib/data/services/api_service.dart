@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:front_openerp/core/config/api_config.dart';
-import 'package:front_openerp/data/repositories/local_storage.dart';
+import 'package:openerp_front/core/config/api_config.dart';
+import 'package:openerp_front/data/repositories/local_storage.dart';
 import 'package:uuid/uuid.dart';
 
 class ApiService {

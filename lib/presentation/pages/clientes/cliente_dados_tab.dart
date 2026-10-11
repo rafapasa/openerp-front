@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:front_openerp/data/models/models.dart';
-import 'package:front_openerp/presentation/providers/providers.dart';
+import 'package:openerp_front/data/models/models.dart';
+import 'package:openerp_front/presentation/providers/providers.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 

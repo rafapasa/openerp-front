@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
-import 'package:front_openerp/core/helpers/json_helper.dart';
-import 'package:front_openerp/data/models/tenant_llm_config.dart';
-import 'package:front_openerp/data/models/tenant_model.dart';
-import 'package:front_openerp/data/models/tenant_notificacao_model.dart';
-import 'package:front_openerp/data/services/api_service.dart';
+import 'package:openerp_front/core/helpers/json_helper.dart';
+import 'package:openerp_front/data/models/tenant_llm_config.dart';
+import 'package:openerp_front/data/models/tenant_model.dart';
+import 'package:openerp_front/data/models/tenant_notificacao_model.dart';
+import 'package:openerp_front/data/services/api_service.dart';
 
 class TenantService {
   final ApiService _api;

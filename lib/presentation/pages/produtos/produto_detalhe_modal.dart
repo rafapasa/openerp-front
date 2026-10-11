@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:front_openerp/presentation/widgets/viewport_box.dart';
-import 'package:front_openerp/core/helpers/snack_helper.dart';
-import 'package:front_openerp/data/models/models.dart';
-import 'package:front_openerp/presentation/providers/providers.dart';
-import 'package:front_openerp/presentation/theme/app_colors.dart';
-import 'package:front_openerp/presentation/pages/produtos/produto_token_tab.dart';
-import 'package:front_openerp/presentation/pages/produtos/uso_nn_combo.dart';
-import 'package:front_openerp/presentation/widgets/app_section_card.dart';
+import 'package:openerp_front/presentation/widgets/viewport_box.dart';
+import 'package:openerp_front/core/helpers/snack_helper.dart';
+import 'package:openerp_front/data/models/models.dart';
+import 'package:openerp_front/presentation/providers/providers.dart';
+import 'package:openerp_front/presentation/theme/app_colors.dart';
+import 'package:openerp_front/presentation/pages/produtos/produto_token_tab.dart';
+import 'package:openerp_front/presentation/pages/produtos/uso_nn_combo.dart';
+import 'package:openerp_front/presentation/widgets/app_section_card.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:front_openerp/core/helpers/snack_helper.dart';
-import 'package:front_openerp/data/models/models.dart';
-import 'package:front_openerp/data/services/uso_service.dart';
-import 'package:front_openerp/presentation/pages/produtos/uso_edit_dialog.dart';
-import 'package:front_openerp/presentation/theme/app_colors.dart';
+import 'package:openerp_front/core/helpers/snack_helper.dart';
+import 'package:openerp_front/data/models/models.dart';
+import 'package:openerp_front/data/services/uso_service.dart';
+import 'package:openerp_front/presentation/pages/produtos/uso_edit_dialog.dart';
+import 'package:openerp_front/presentation/theme/app_colors.dart';
 import 'package:provider/provider.dart';
 
 class UsoNnCombo extends StatefulWidget {

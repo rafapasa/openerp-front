@@ -1,8 +1,8 @@
 // lib/presentation/pages/clientes/clientes_page.dart
 // Refatorado eTools - Responsivo Web tabela + Mobile cards
 import 'package:flutter/material.dart';
-import 'package:front_openerp/presentation/pages/clientes/cliente_detalhe_modal.dart';
-import 'package:front_openerp/presentation/providers/providers.dart';
+import 'package:openerp_front/presentation/pages/clientes/cliente_detalhe_modal.dart';
+import 'package:openerp_front/presentation/providers/providers.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -10,7 +10,7 @@ import '../../../data/models/models.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_theme.dart';
 
-import 'package:front_openerp/presentation/pages/clientes/novo_cliente_dialog.dart';
+import 'package:openerp_front/presentation/pages/clientes/novo_cliente_dialog.dart';
 
 class ClientesPage extends StatefulWidget {
   const ClientesPage({super.key});

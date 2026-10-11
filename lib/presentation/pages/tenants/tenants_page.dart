@@ -1,9 +1,9 @@
 // lib/presentation/pages/tenants/tenants_page.dart
 // Refatorado eTools - Responsivo Web (tabela) + Mobile (cards)
 import 'package:flutter/material.dart';
-import 'package:front_openerp/presentation/pages/tenants/tenant_detalhe_modal.dart';
-import 'package:front_openerp/presentation/pages/tenants/form_tenant_page.dart';
-import 'package:front_openerp/presentation/providers/tenant_provider.dart';
+import 'package:openerp_front/presentation/pages/tenants/tenant_detalhe_modal.dart';
+import 'package:openerp_front/presentation/pages/tenants/form_tenant_page.dart';
+import 'package:openerp_front/presentation/providers/tenant_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../theme/app_colors.dart';

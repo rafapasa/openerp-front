@@ -1,6 +1,6 @@
 // lib/data/models/usuario_model.dart
-import 'package:front_openerp/data/models/login_model.dart';
-import 'package:front_openerp/data/models/tenant_model.dart';
+import 'package:openerp_front/data/models/login_model.dart';
+import 'package:openerp_front/data/models/tenant_model.dart';
 
 class UsuarioModel {
   final int id;

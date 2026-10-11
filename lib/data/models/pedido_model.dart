@@ -1,4 +1,4 @@
-import 'package:front_openerp/core/helpers/json_helper.dart';
+import 'package:openerp_front/core/helpers/json_helper.dart';
 
 import 'cliente_model.dart';
 import 'endereco_model.dart';

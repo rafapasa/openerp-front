@@ -1,7 +1,7 @@
 // lib/presentation/providers/pedido_provider.dart
 import 'package:flutter/material.dart';
-import 'package:front_openerp/data/models/models.dart';
-import 'package:front_openerp/data/repositories/repositories.dart';
+import 'package:openerp_front/data/models/models.dart';
+import 'package:openerp_front/data/repositories/repositories.dart';
 
 class PedidoProvider extends ChangeNotifier {
   final PedidoRepository _pedidoRepository;

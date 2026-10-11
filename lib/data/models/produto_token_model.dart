@@ -1,4 +1,4 @@
-import 'package:front_openerp/core/helpers/json_helper.dart';
+import 'package:openerp_front/core/helpers/json_helper.dart';
 
 /// Origens possíveis de um token de produto.
 /// - nome: palavra que já está no nome do produto (default)

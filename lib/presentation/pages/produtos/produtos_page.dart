@@ -1,8 +1,8 @@
 // lib/presentation/pages/produtos/produtos_page.dart
 // Refatorado eTools - Responsivo
 import 'package:flutter/material.dart';
-import 'package:front_openerp/presentation/pages/produtos/produto_detalhe_modal.dart';
-import 'package:front_openerp/presentation/providers/providers.dart';
+import 'package:openerp_front/presentation/pages/produtos/produto_detalhe_modal.dart';
+import 'package:openerp_front/presentation/providers/providers.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 

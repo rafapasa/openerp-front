@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:front_openerp/core/helpers/snack_helper.dart';
-import 'package:front_openerp/data/models/models.dart';
-import 'package:front_openerp/presentation/providers/produto_provider.dart';
-import 'package:front_openerp/presentation/theme/app_colors.dart';
+import 'package:openerp_front/core/helpers/snack_helper.dart';
+import 'package:openerp_front/data/models/models.dart';
+import 'package:openerp_front/presentation/providers/produto_provider.dart';
+import 'package:openerp_front/presentation/theme/app_colors.dart';
 import 'package:provider/provider.dart';
 
 /// Linha editável em memória. `id == null` indica token novo (POST).

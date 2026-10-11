@@ -1,9 +1,9 @@
 // lib/presentation/layout/main_layout.dart
 import 'package:flutter/material.dart';
-import 'package:front_openerp/presentation/pages/auth/conta_page.dart';
-import 'package:front_openerp/presentation/pages/auth/login_page.dart';
-import 'package:front_openerp/presentation/pages/auth/selecionar_tenant_page.dart';
-import 'package:front_openerp/presentation/providers/providers.dart';
+import 'package:openerp_front/presentation/pages/auth/conta_page.dart';
+import 'package:openerp_front/presentation/pages/auth/login_page.dart';
+import 'package:openerp_front/presentation/pages/auth/selecionar_tenant_page.dart';
+import 'package:openerp_front/presentation/providers/providers.dart';
 import 'package:provider/provider.dart';
 
 import '../theme/app_colors.dart';

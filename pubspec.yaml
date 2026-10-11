@@ -1,4 +1,4 @@
-name: front_openerp
+name: openerp_front
 description: "Dashboard para conversão de conversas do WhatsApp em compras (Conversation Commerce)"
 publish_to: "none"
 version: 0.4.1+1

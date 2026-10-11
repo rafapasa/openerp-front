@@ -1,5 +1,5 @@
-import 'package:front_openerp/core/helpers/json_helper.dart';
-import 'package:front_openerp/data/models/tenant_llm_config.dart';
+import 'package:openerp_front/core/helpers/json_helper.dart';
+import 'package:openerp_front/data/models/tenant_llm_config.dart';
 
 class TenantModel {
   final int? id;

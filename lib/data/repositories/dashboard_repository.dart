@@ -1,7 +1,7 @@
 // lib/data/repositories/dashboard_repository.dart
-import 'package:front_openerp/data/models/models.dart';
-import 'package:front_openerp/data/repositories/local_storage.dart';
-import 'package:front_openerp/data/services/services.dart';
+import 'package:openerp_front/data/models/models.dart';
+import 'package:openerp_front/data/repositories/local_storage.dart';
+import 'package:openerp_front/data/services/services.dart';
 
 class DashboardRepository {
   final DashboardService _dashboardService;

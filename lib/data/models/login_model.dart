@@ -24,7 +24,7 @@
 // Cada item de `users` é uma conta do mesmo e-mail dentro de um tenant, com o
 // seu próprio token JWT (claims: user_id, tenant_id, role).
 
-import 'package:front_openerp/data/models/tenant_model.dart';
+import 'package:openerp_front/data/models/tenant_model.dart';
 
 /// Uma conta retornada no login: dados do usuário + token válido p/ um tenant.
 class LoginConta {

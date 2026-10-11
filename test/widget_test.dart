@@ -6,8 +6,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:front_openerp/data/repositories/local_storage.dart';
-import 'package:front_openerp/main.dart';
+import 'package:openerp_front/data/repositories/local_storage.dart';
+import 'package:openerp_front/main.dart';
 import 'package:hive/hive.dart';
 
 void main() {

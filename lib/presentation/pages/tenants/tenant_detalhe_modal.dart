@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:front_openerp/presentation/widgets/viewport_box.dart';
-import 'package:front_openerp/data/models/tenant_model.dart';
-import 'package:front_openerp/presentation/theme/app_colors.dart';
+import 'package:openerp_front/presentation/widgets/viewport_box.dart';
+import 'package:openerp_front/data/models/tenant_model.dart';
+import 'package:openerp_front/presentation/theme/app_colors.dart';
 
 import 'tenant_dados_tab.dart';
 import 'tenant_configuracoes_tab.dart';

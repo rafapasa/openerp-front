@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:front_openerp/presentation/theme/app_colors.dart';
+import 'package:openerp_front/presentation/theme/app_colors.dart';
 
 void showSavedSnack(BuildContext context, {String message = 'Salvo'}) {
   if (!context.mounted) return;

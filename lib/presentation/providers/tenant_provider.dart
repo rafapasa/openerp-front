@@ -1,9 +1,9 @@
 // lib/presentation/providers/tenant_provider.dart
 import 'package:flutter/material.dart';
-import 'package:front_openerp/data/models/tenant_llm_config.dart';
-import 'package:front_openerp/data/models/tenant_model.dart';
-import 'package:front_openerp/data/models/tenant_notificacao_model.dart';
-import 'package:front_openerp/data/repositories/tenant_repository.dart';
+import 'package:openerp_front/data/models/tenant_llm_config.dart';
+import 'package:openerp_front/data/models/tenant_model.dart';
+import 'package:openerp_front/data/models/tenant_notificacao_model.dart';
+import 'package:openerp_front/data/repositories/tenant_repository.dart';
 
 class TenantProvider extends ChangeNotifier {
   final TenantRepository _repository;

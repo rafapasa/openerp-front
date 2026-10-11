@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:front_openerp/data/models/models.dart';
+import 'package:openerp_front/data/models/models.dart';
 
 import 'pedido_model_test.dart';
 

@@ -1,8 +1,8 @@
 // lib/presentation/pages/tenants/form_tenant_page.dart
 // Refatorado eTools - Responsivo e bonito
 import 'package:flutter/material.dart';
-import 'package:front_openerp/data/models/tenant_model.dart';
-import 'package:front_openerp/presentation/providers/tenant_provider.dart';
+import 'package:openerp_front/data/models/tenant_model.dart';
+import 'package:openerp_front/presentation/providers/tenant_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../theme/app_colors.dart';

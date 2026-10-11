@@ -2,8 +2,8 @@
 // Testes do parsing da resposta do POST /login (LoginResponseList do backend)
 // e da conversão de uma conta (users[i]) para o UsuarioModel.
 import 'package:flutter_test/flutter_test.dart';
-import 'package:front_openerp/data/models/models.dart';
-import 'package:front_openerp/data/models/tenant_model.dart';
+import 'package:openerp_front/data/models/models.dart';
+import 'package:openerp_front/data/models/tenant_model.dart';
 
 void main() {
   group('LoginResultado.fromJson (LoginResponseList)', () {

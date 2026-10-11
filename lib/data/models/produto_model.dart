@@ -1,5 +1,5 @@
-import 'package:front_openerp/core/helpers/json_helper.dart';
-import 'package:front_openerp/data/models/uso_model.dart';
+import 'package:openerp_front/core/helpers/json_helper.dart';
+import 'package:openerp_front/data/models/uso_model.dart';
 
 class ProdutoModel {
   final int id;

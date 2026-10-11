@@ -1,8 +1,8 @@
 // lib/data/repositories/tenant_repository.dart
-import 'package:front_openerp/data/models/tenant_llm_config.dart';
-import 'package:front_openerp/data/models/tenant_model.dart';
-import 'package:front_openerp/data/models/tenant_notificacao_model.dart';
-import 'package:front_openerp/data/services/tenant_service.dart';
+import 'package:openerp_front/data/models/tenant_llm_config.dart';
+import 'package:openerp_front/data/models/tenant_model.dart';
+import 'package:openerp_front/data/models/tenant_notificacao_model.dart';
+import 'package:openerp_front/data/services/tenant_service.dart';
 
 class TenantRepository {
   final TenantService _service;

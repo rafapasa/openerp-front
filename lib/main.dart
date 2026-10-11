@@ -1,14 +1,14 @@
 // lib/main.dart
 import 'package:flutter/material.dart';
-import 'package:front_openerp/data/repositories/repositories.dart';
-import 'package:front_openerp/data/repositories/tenant_repository.dart';
-import 'package:front_openerp/data/services/categoria_service.dart';
-import 'package:front_openerp/data/services/services.dart';
-import 'package:front_openerp/data/services/tenant_service.dart';
-import 'package:front_openerp/presentation/pages/pages.dart';
-import 'package:front_openerp/presentation/providers/providers.dart';
-import 'package:front_openerp/presentation/providers/tenant_provider.dart';
-import 'package:front_openerp/presentation/theme/app_theme.dart';
+import 'package:openerp_front/data/repositories/repositories.dart';
+import 'package:openerp_front/data/repositories/tenant_repository.dart';
+import 'package:openerp_front/data/services/categoria_service.dart';
+import 'package:openerp_front/data/services/services.dart';
+import 'package:openerp_front/data/services/tenant_service.dart';
+import 'package:openerp_front/presentation/pages/pages.dart';
+import 'package:openerp_front/presentation/providers/providers.dart';
+import 'package:openerp_front/presentation/providers/tenant_provider.dart';
+import 'package:openerp_front/presentation/theme/app_theme.dart';
 import 'package:provider/provider.dart';
 
 void main() async {

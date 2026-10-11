@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:front_openerp/data/models/models.dart';
-import 'package:front_openerp/data/services/pedido_service.dart';
+import 'package:openerp_front/data/models/models.dart';
+import 'package:openerp_front/data/services/pedido_service.dart';
 
 import 'fakes/fake_api_service.dart';
 import 'pedido_model_test.dart';

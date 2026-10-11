@@ -1,8 +1,8 @@
 // lib/data/services/auth_service.dart
 import 'package:dio/dio.dart';
-import 'package:front_openerp/core/constants/api_constants.dart';
-import 'package:front_openerp/data/models/models.dart';
-import 'package:front_openerp/data/services/api_service.dart';
+import 'package:openerp_front/core/constants/api_constants.dart';
+import 'package:openerp_front/data/models/models.dart';
+import 'package:openerp_front/data/services/api_service.dart';
 
 class AuthService {
   final ApiService _apiService;
