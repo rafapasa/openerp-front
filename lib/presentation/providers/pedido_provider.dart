@@ -37,27 +37,21 @@ class PedidoProvider extends ChangeNotifier {
 
   String? get statusFilter => _statusFilter;
   int? get clienteFilter => _clienteFilter;
+  String? get dataInicioFilter => _dataInicioFilter;
+  String? get dataFimFilter => _dataFimFilter;
 
   // ============================================================
   // 📊 Pedidos por Status (para gráficos)
   // ============================================================
   Map<StatusPedido, List<PedidoModel>> get pedidosAgrupadosPorStatus {
     return {
-      StatusPedido.pendente: _pedidos
-          .where((p) => p.status == StatusPedido.pendente)
-          .toList(),
-      StatusPedido.confirmado: _pedidos
-          .where((p) => p.status == StatusPedido.confirmado)
-          .toList(),
-      StatusPedido.preparando: _pedidos
-          .where((p) => p.status == StatusPedido.preparando)
-          .toList(),
-      StatusPedido.entregue: _pedidos
-          .where((p) => p.status == StatusPedido.entregue)
-          .toList(),
-      StatusPedido.cancelado: _pedidos
-          .where((p) => p.status == StatusPedido.cancelado)
-          .toList(),
+      StatusPedido.pendente: _pedidos.where((p) => p.status == StatusPedido.pendente).toList(),
+      StatusPedido.confirmado: _pedidos.where((p) => p.status == StatusPedido.confirmado).toList(),
+      StatusPedido.emPreparo: _pedidos.where((p) => p.status == StatusPedido.emPreparo).toList(),
+      StatusPedido.prontoRetirada: _pedidos.where((p) => p.status == StatusPedido.prontoRetirada).toList(),
+      StatusPedido.saiuEntrega: _pedidos.where((p) => p.status == StatusPedido.saiuEntrega).toList(),
+      StatusPedido.entregue: _pedidos.where((p) => p.status == StatusPedido.entregue).toList(),
+      StatusPedido.cancelado: _pedidos.where((p) => p.status == StatusPedido.cancelado).toList(),
     };
   }
 
@@ -173,12 +167,9 @@ class PedidoProvider extends ChangeNotifier {
   // ============================================================
   // 📝 Atualizar Status
   // ============================================================
-  Future<bool> updateStatus(int id, StatusPedido novoStatus) async {
+  Future<bool> updateStatus(int id, StatusPedido novoStatus, {String? motivo}) async {
     try {
-      final pedidoAtualizado = await _pedidoRepository.updateStatus(
-        id,
-        novoStatus,
-      );
+      final pedidoAtualizado = await _pedidoRepository.updateStatus(id, novoStatus, motivo: motivo);
 
       // Atualizar na lista
       final index = _pedidos.indexWhere((p) => p.id == id);
@@ -198,6 +189,51 @@ class PedidoProvider extends ChangeNotifier {
   // ============================================================
   // 🔄 Refresh
   // ============================================================
+  Future<bool> marcarPago(int id, {int? formaPagamentoId, double? valor}) async {
+    try {
+      final atualizado = await _pedidoRepository.marcarPago(id, formaPagamentoId: formaPagamentoId, valor: valor);
+      final index = _pedidos.indexWhere((p) => p.id == id);
+      if (index != -1) _pedidos[index] = atualizado;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<PedidoModel?> createPedido({
+    required int clienteId,
+    required String clienteNome,
+    String clienteTelefone = '',
+    required List<Map<String, dynamic>> itens,
+    String? observacoes,
+    int? enderecoEntregaId,
+    String origem = 'dashboard',
+    String? etiqueta,
+  }) async {
+    try {
+      final criado = await _pedidoRepository.createPedido(
+        clienteId: clienteId,
+        clienteNome: clienteNome,
+        clienteTelefone: clienteTelefone,
+        itens: itens,
+        observacoes: observacoes,
+        enderecoEntregaId: enderecoEntregaId,
+        origem: origem,
+        etiqueta: etiqueta,
+      );
+      _pedidos = [criado, ..._pedidos];
+      notifyListeners();
+      return criado;
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+      return null;
+    }
+  }
+
   Future<void> refreshPedidos() async {
     await loadPedidos(
       forceRefresh: true,
@@ -211,12 +247,12 @@ class PedidoProvider extends ChangeNotifier {
   // ============================================================
   // 🗑️ Limpar Filtros
   // ============================================================
-  void clearFilters() {
+  Future<void> clearFilters() async {
     _statusFilter = null;
     _clienteFilter = null;
     _dataInicioFilter = null;
     _dataFimFilter = null;
-    notifyListeners();
+    await loadPedidos(forceRefresh: true);
   }
 
   // ============================================================

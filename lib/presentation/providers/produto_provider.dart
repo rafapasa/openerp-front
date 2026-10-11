@@ -152,6 +152,131 @@ class ProdutoProvider extends ChangeNotifier {
     }
   }
 
+  Future<ProdutoModel?> createProduto({
+    required String nome,
+    double? preco,
+    String? descricao,
+    int? categoriaId,
+    bool disponivel = true,
+  }) async {
+    try {
+      final payload = <String, dynamic>{
+        'nome': nome,
+        if (preco != null) 'preco': preco,
+        if (descricao != null && descricao.isNotEmpty) 'descricao': descricao,
+        if (categoriaId != null) 'categoria_id': categoriaId,
+        'disponivel': disponivel,
+      };
+      final criado = await _produtoRepository.createProduto(payload);
+      _produtos = [criado, ..._produtos];
+      notifyListeners();
+      return criado;
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+      return null;
+    }
+  }
+
+  Future<ProdutoModel?> updateProduto(int id, {
+    required String nome,
+    required double preco,
+    String? descricao,
+    int? categoriaId,
+  }) async {
+    try {
+      final payload = <String, dynamic>{
+        'nome': nome,
+        'preco': preco,
+        if (descricao != null && descricao.isNotEmpty) 'descricao': descricao,
+        if (categoriaId != null) 'categoria_id': categoriaId,
+      };
+      final atualizado = await _produtoRepository.updateProduto(id, payload);
+      final index = _produtos.indexWhere((p) => p.id == id);
+      if (index != -1) {
+        _produtos[index] = atualizado;
+        notifyListeners();
+      }
+      return atualizado;
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+      return null;
+    }
+  }
+
+  Future<bool> deleteProduto(int id) async {
+    try {
+      await _produtoRepository.deleteProduto(id);
+      _produtos.removeWhere((p) => p.id == id);
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> toggleDisponibilidade(int id, bool disponivel) async {
+    try {
+      await _produtoRepository.toggleDisponibilidade(id, disponivel);
+      final index = _produtos.indexWhere((p) => p.id == id);
+      if (index != -1) {
+        _produtos[index] = _produtos[index].copyWith(disponivel: disponivel);
+        notifyListeners();
+      }
+      return true;
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+      return false;
+    }
+  }
+
+  // ============================================================
+  // 🔤 Tokens do produto
+  // ============================================================
+  Future<List<ProdutoTokenModel>> listarTokens(int produtoId) async {
+    try {
+      return await _produtoRepository.listarTokens(produtoId);
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+      return [];
+    }
+  }
+
+  Future<List<ProdutoTokenModel>> criarTokens(int produtoId, List<ProdutoTokenModel> tokens) async {
+    try {
+      return await _produtoRepository.criarTokens(produtoId, tokens);
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+      rethrow;
+    }
+  }
+
+  Future<List<ProdutoTokenModel>> atualizarTokens(int produtoId, List<ProdutoTokenModel> tokens) async {
+    try {
+      return await _produtoRepository.atualizarTokens(produtoId, tokens);
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+      rethrow;
+    }
+  }
+
+  Future<void> excluirTokens(int produtoId, List<int> ids) async {
+    try {
+      await _produtoRepository.excluirTokens(produtoId, ids);
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+      rethrow;
+    }
+  }
+
   // ============================================================
   // 🔄 Refresh
   // ============================================================

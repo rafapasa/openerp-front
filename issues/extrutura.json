@@ -1,88 +1,299 @@
-[{'type':'directory','name': '.','contents':[
-    {'type':'directory','name':'core','contents':[
-      {'type':'directory','name':'constants','contents':[
-        {'type':'file','name':'api_constants.dart'}
-      ]}
-    ]},
-    {'type':'directory','name':'data','contents':[
-      {'type':'directory','name':'models','contents':[
-        {'type':'file','name':'api_response_model.dart'},
-        {'type':'file','name':'cliente_model.dart'},
-        {'type':'file','name':'dashboard_model.dart'},
-        {'type':'file','name':'endereco_model.dart'},
-        {'type':'file','name':'enums.dart'},
-        {'type':'file','name':'login_model.dart'},
-        {'type':'file','name':'models.dart'},
-        {'type':'file','name':'pagination_model.dart'},
-        {'type':'file','name':'pedido_model.dart'},
-        {'type':'file','name':'produto_model.dart'},
-        {'type':'file','name':'tenant_model.dart'},
-        {'type':'file','name':'usuario_model.dart'}
-      ]},
-      {'type':'directory','name':'repositories','contents':[
-        {'type':'file','name':'auth_repository.dart'},
-        {'type':'file','name':'cliente_repository.dart'},
-        {'type':'file','name':'dashboard_repository.dart'},
-        {'type':'file','name':'local_storage.dart'},
-        {'type':'file','name':'pedido_repository.dart'},
-        {'type':'file','name':'produto_repository.dart'},
-        {'type':'file','name':'repositories.dart'},
-        {'type':'file','name':'tenant_repository.dart'}
-      ]},
-      {'type':'directory','name':'services','contents':[
-        {'type':'file','name':'api_service.dart'},
-        {'type':'file','name':'auth_service.dart'},
-        {'type':'file','name':'cliente_service.dart'},
-        {'type':'file','name':'dashboard_service.dart'},
-        {'type':'file','name':'pedido_service.dart'},
-        {'type':'file','name':'produto_service.dart'},
-        {'type':'file','name':'services.dart'},
-        {'type':'file','name':'tenant_service.dart'}
-      ]}
-    ]},
-    {'type':'file','name':'extrutura.json'},
-    {'type':'file','name':'main.dart'},
-    {'type':'directory','name':'presentation','contents':[
-      {'type':'directory','name':'pages','contents':[
-        {'type':'directory','name':'auth','contents':[
-          {'type':'file','name':'login_page.dart'},
-          {'type':'file','name':'selecionar_tenant_page.dart'}
-        ]},
-        {'type':'directory','name':'clientes','contents':[
-          {'type':'file','name':'clientes_page.dart'},
-          {'type':'file','name':'detalhe_cliente_page.dart'}
-        ]},
-        {'type':'directory','name':'dashboard','contents':[
-          {'type':'file','name':'dashboard_page.dart'},
-          {'type':'file','name':'dashboard_widgets.dart'}
-        ]},
-        {'type':'file','name':'home_page.dart'},
-        {'type':'file','name':'pages.dart'},
-        {'type':'directory','name':'pedidos','contents':[
-          {'type':'file','name':'detalhe_pedido_page.dart'},
-          {'type':'file','name':'pedidos_page.dart'}
-        ]},
-        {'type':'directory','name':'produtos','contents':[
-          {'type':'file','name':'detalhe_produto_page.dart'},
-          {'type':'file','name':'produtos_page.dart'}
-        ]},
-        {'type':'file','name':'splash_page.dart'},
-        {'type':'directory','name':'tenants','contents':[
-          {'type':'file','name':'detalhe_tenant_page.dart'},
-          {'type':'file','name':'form_tenant_page.dart'},
-          {'type':'file','name':'tenants_page.dart'}
-        ]}
-      ]},
-      {'type':'directory','name':'providers','contents':[
-        {'type':'file','name':'auth_provider.dart'},
-        {'type':'file','name':'cliente_provider.dart'},
-        {'type':'file','name':'dashboard_provider.dart'},
-        {'type':'file','name':'pedido_provider.dart'},
-        {'type':'file','name':'produto_provider.dart'},
-        {'type':'file','name':'providers.dart'},
-        {'type':'file','name':'tenant_provider.dart'}
-      ]}
-    ]}
-  ]},
-  {'type':'report','directories':15,'files':54}
-]
+{
+  "raiz": "/home/opc/prj/front-openerp",
+  "estrutura": [
+    {
+      "type": "directory",
+      "name": ".",
+      "contents": [
+        {
+          "type": "directory",
+          "name": "lib",
+          "contents": [
+            {
+              "type": "directory",
+              "name": "core",
+              "contents": [
+                {
+                  "type": "directory",
+                  "name": "constants",
+                  "contents": [
+                    { "type": "file", "name": "api_constants.dart" }
+                  ]
+                },
+                {
+                  "type": "directory",
+                  "name": "helpers",
+                  "contents": [
+                    { "type": "file", "name": "json_helper.dart" },
+                    { "type": "file", "name": "launch_url.dart" },
+                    { "type": "file", "name": "launch_url_stub.dart" },
+                    { "type": "file", "name": "launch_url_web.dart" },
+                    { "type": "file", "name": "snack_helper.dart" }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "directory",
+              "name": "data",
+              "contents": [
+                {
+                  "type": "directory",
+                  "name": "models",
+                  "contents": [
+                    { "type": "file", "name": "api_response_model.dart" },
+                    { "type": "file", "name": "cliente_model.dart" },
+                    { "type": "file", "name": "dashboard_model.dart" },
+                    { "type": "file", "name": "endereco_model.dart" },
+                    { "type": "file", "name": "enums.dart" },
+                    { "type": "file", "name": "login_model.dart" },
+                    { "type": "file", "name": "models.dart" },
+                    { "type": "file", "name": "pagination_model.dart" },
+                    { "type": "file", "name": "pedido_model.dart" },
+                    { "type": "file", "name": "produto_model.dart" },
+                    { "type": "file", "name": "tenant_model.dart" },
+                    { "type": "file", "name": "usuario_model.dart" }
+                  ]
+                },
+                {
+                  "type": "directory",
+                  "name": "repositories",
+                  "contents": [
+                    { "type": "file", "name": "auth_repository.dart" },
+                    { "type": "file", "name": "cliente_repository.dart" },
+                    { "type": "file", "name": "dashboard_repository.dart" },
+                    { "type": "file", "name": "local_storage.dart" },
+                    { "type": "file", "name": "pedido_repository.dart" },
+                    { "type": "file", "name": "produto_repository.dart" },
+                    { "type": "file", "name": "repositories.dart" },
+                    { "type": "file", "name": "tenant_repository.dart" }
+                  ]
+                },
+                {
+                  "type": "directory",
+                  "name": "services",
+                  "contents": [
+                    { "type": "file", "name": "api_service.dart" },
+                    { "type": "file", "name": "auth_service.dart" },
+                    { "type": "file", "name": "cliente_service.dart" },
+                    { "type": "file", "name": "dashboard_service.dart" },
+                    { "type": "file", "name": "pedido_service.dart" },
+                    { "type": "file", "name": "produto_service.dart" },
+                    { "type": "file", "name": "services.dart" },
+                    { "type": "file", "name": "tenant_service.dart" }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "directory",
+              "name": "presentation",
+              "contents": [
+                {
+                  "type": "directory",
+                  "name": "layout",
+                  "contents": [
+                    { "type": "file", "name": "main_layout.dart" }
+                  ]
+                },
+                {
+                  "type": "directory",
+                  "name": "pages",
+                  "contents": [
+                    {
+                      "type": "directory",
+                      "name": "auth",
+                      "contents": [
+                        { "type": "file", "name": "login_page.dart" },
+                        { "type": "file", "name": "selecionar_tenant_page.dart" }
+                      ]
+                    },
+                    {
+                      "type": "directory",
+                      "name": "clientes",
+                      "contents": [
+                        { "type": "file", "name": "clientes_page.dart" },
+                        { "type": "file", "name": "detalhe_cliente_page.dart" }
+                      ]
+                    },
+                    {
+                      "type": "directory",
+                      "name": "dashboard",
+                      "contents": [
+                        { "type": "file", "name": "dashboard_page.dart" }
+                      ]
+                    },
+                    {
+                      "type": "directory",
+                      "name": "pedidos",
+                      "contents": [
+                        { "type": "file", "name": "detalhe_pedido_page.dart" },
+                        { "type": "file", "name": "pedido_detalhe_modal.dart" },
+                        { "type": "file", "name": "pedidos_page.dart" }
+                      ]
+                    },
+                    {
+                      "type": "directory",
+                      "name": "produtos",
+                      "contents": [
+                        { "type": "file", "name": "detalhe_produto_page.dart" },
+                        { "type": "file", "name": "produtos_page.dart" }
+                      ]
+                    },
+                    {
+                      "type": "directory",
+                      "name": "tenants",
+                      "contents": [
+                        { "type": "file", "name": "detalhe_tenant_page.dart" },
+                        { "type": "file", "name": "detalhe_tenant_page.dart.bak" },
+                        { "type": "file", "name": "form_tenant_page.dart" },
+                        { "type": "file", "name": "form_tenant_page.dart.bak" },
+                        { "type": "file", "name": "tenants_page.dart" },
+                        { "type": "file", "name": "tenants_page.dart.bak" }
+                      ]
+                    },
+                    { "type": "file", "name": "home_page.dart" },
+                    { "type": "file", "name": "pages.dart" },
+                    { "type": "file", "name": "pages.zip.md" },
+                    { "type": "file", "name": "splash_page.dart" }
+                  ]
+                },
+                {
+                  "type": "directory",
+                  "name": "providers",
+                  "contents": [
+                    { "type": "file", "name": "auth_provider.dart" },
+                    { "type": "file", "name": "cliente_provider.dart" },
+                    { "type": "file", "name": "dashboard_provider.dart" },
+                    { "type": "file", "name": "pedido_provider.dart" },
+                    { "type": "file", "name": "produto_provider.dart" },
+                    { "type": "file", "name": "providers.dart" },
+                    { "type": "file", "name": "tenant_provider.dart" }
+                  ]
+                },
+                {
+                  "type": "directory",
+                  "name": "theme",
+                  "contents": [
+                    { "type": "file", "name": "app_colors.dart" },
+                    { "type": "file", "name": "app_text_styles.dart" },
+                    { "type": "file", "name": "app_theme.dart" }
+                  ]
+                }
+              ]
+            },
+            { "type": "file", "name": "main.dart" }
+          ]
+        },
+        {
+          "type": "directory",
+          "name": "assets",
+          "contents": [
+            { "type": "directory", "name": "animations", "contents": [] },
+            { "type": "directory", "name": "fonts", "contents": [] },
+            { "type": "directory", "name": "icons", "contents": [] },
+            {
+              "type": "directory",
+              "name": "images",
+              "contents": [
+                { "type": "file", "name": "Icone_azul_500x500.png" },
+                { "type": "file", "name": "Logo_fundo_branco.jpg" },
+                { "type": "file", "name": "img_splash.jpg" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "directory",
+          "name": "test",
+          "contents": [
+            { "type": "file", "name": "auth_validation_test.dart" },
+            { "type": "file", "name": "login_model_test.dart" },
+            { "type": "file", "name": "pedido_model_test.dart" },
+            { "type": "file", "name": "pedido_provider_test.dart" },
+            { "type": "file", "name": "pedido_service_test.dart" },
+            { "type": "file", "name": "status_pedido_test.dart" },
+            { "type": "file", "name": "widget_test.dart" },
+            {
+              "type": "directory",
+              "name": "fakes",
+              "contents": [
+                { "type": "file", "name": "fake_api_service.dart" },
+                { "type": "file", "name": "fake_pedido_repository.dart" }
+              ]
+            },
+            { "type": "directory", "name": "models", "contents": [] }
+          ]
+        },
+        {
+          "type": "directory",
+          "name": "web",
+          "contents": [
+            { "type": "file", "name": "favicon.png" },
+            { "type": "file", "name": "index.html" },
+            { "type": "file", "name": "manifest.json" },
+            { "type": "directory", "name": "icons", "contents": [] }
+          ]
+        },
+        {
+          "type": "directory",
+          "name": "issues",
+          "contents": [
+            { "type": "file", "name": "extrutura.json" },
+            { "type": "file", "name": "issue-001.json" },
+            { "type": "file", "name": "issue.json" }
+          ]
+        },
+        {
+          "type": "directory",
+          "name": ".vscode",
+          "contents": [
+            { "type": "file", "name": "launch.json" },
+            { "type": "file", "name": "settings.json" }
+          ]
+        },
+        { "type": "file", "name": "pubspec.yaml" },
+        { "type": "file", "name": "pubspec.lock" },
+        { "type": "file", "name": "makefile" },
+        { "type": "file", "name": "Dockerfile.web" },
+        { "type": "file", "name": "nginx.web.conf" },
+        { "type": "file", "name": "docker-compose.web.yml" },
+        { "type": "file", "name": "analysis_options.yaml" },
+        { "type": "file", "name": "devtools_options.yaml" },
+        { "type": "file", "name": "AGENTS.md" },
+        { "type": "file", "name": "README.md" },
+        { "type": "file", "name": "Registro.md" },
+        { "type": "file", "name": "doc.txt" },
+        { "type": "file", "name": ".gitignore" },
+        { "type": "file", "name": ".metadata" },
+        { "type": "file", "name": ".flutter-plugins-dependencies" },
+        { "type": "file", "name": "front_openerp.iml" }
+      ]
+    },
+    {
+      "type": "report",
+      "directories": 20,
+      "files": 78
+    }
+  ],
+  "rules": [
+    "Este projeto usa Flutter Web/Android/iOS com Provider para estado.",
+    "Arquitetura em 3 camadas: data (models/services/repositories) + presentation (providers/pages/widgets) + core (constants/helpers).",
+    "Navegacao via go_router em lib/main.dart (rotas nomeadas).",
+    "HTTP Client: Dio, encapsulado em ApiService (lib/data/services/api_service.dart).",
+    "Cache local: Hive, encapsulado em LocalStorage (lib/data/repositories/local_storage.dart).",
+    "Gerenciamento de estado: provider (ChangeNotifier). Providers em lib/presentation/providers/.",
+    "Estilo: AppColors e AppTheme em lib/presentation/theme/.",
+    "Icones: Material Icons + font_awesome_flutter (para WhatsApp).",
+    "Graficos: fl_chart em lib/presentation/pages/dashboard/.",
+    "Formatacao de data: intl (DateFormat, NumberFormat).",
+    "Modais seguem o padrao do pedido_detalhe_modal.dart: showDialog em telas largas (>720px) com Dialog + ConstrainedBox, showModalBottomSheet em mobile com 92% de altura.",
+    "Formularios com ViaCEP usam Dio direto para https://viacep.com.br/ws/{cep}/json/.",
+    "Endpoints em ApiConstants (lib/core/constants/api_constants.dart).",
+    "Chamadas HTTP passam X-Tenant-ID via interceptor no ApiService (a partir do tenant ativo).",
+    "Testes: flutter_test. Testes em test/ (models, providers, services e fakes).",
+    "Build: make build-web (Flutter Web release). Build Docker via Dockerfile.web. Deploy via docker-compose.web.yml.",
+    "Cada feature no front segue o padrao: model → service → repository → provider → page.",
+    "Refatoracoes preservam o contrato dos providers e services ja existentes; nao quebrar chamadas em uso."
+  ]
+}

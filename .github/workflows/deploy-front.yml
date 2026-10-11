@@ -1,0 +1,87 @@
+# CD: build ARM64 nativo + push Docker Hub + deploy compose (front Flutter Web).
+# Roda no self-hosted da OCI (mesma VM do back).
+#
+# Secrets no repo (Settings → Secrets):
+#   DOCKERHUB_USERNAME
+#   DOCKERHUB_TOKEN
+#
+# Runner: actions/runner na VM ARM, labels: [self-hosted, linux, ARM64, oci, front]
+#   https://github.com/rafapasa/front-openerp/settings/actions/runners
+#
+name: Deploy Frontend
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "IMAGE_TAG (vazio = gha-<run_number>)"
+        required: false
+        default: ""
+  push:
+    branches: [main]
+    paths-ignore:
+      - "**.md"
+      - ".github/workflows/*.disabled"
+
+concurrency:
+  group: cd-front-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, linux, ARM64, oci, front]
+    environment: production
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Instalar Flutter (ARM64 via git)
+        run: |
+          git clone --depth 1 --branch stable https://github.com/flutter/flutter.git $RUNNER_TEMP/flutter
+          echo "$RUNNER_TEMP/flutter/bin" >> $GITHUB_PATH
+
+      - name: Verificar Flutter
+        run: |
+          which flutter
+          flutter --version
+
+      - name: Image tag
+        id: tag
+        run: |
+          if [ -n "${{ github.event.inputs.image_tag }}" ]; then
+            TAG="${{ github.event.inputs.image_tag }}"
+          else
+            TAG="gha-${{ github.run_number }}"
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "🏷️  Usando IMAGE_TAG=$TAG"
+
+      - name: Login Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: Build and push
+        run: |
+          echo "🐳 build-push IMAGE_TAG=${{ steps.tag.outputs.tag }} + latest"
+          make build-push IMAGE_TAG=${{ steps.tag.outputs.tag }}
+
+      - name: Deploy compose
+        run: |
+          echo "🚀 deploy IMAGE_TAG=${{ steps.tag.outputs.tag }}"
+          make deploy IMAGE_TAG=${{ steps.tag.outputs.tag }}
+
+      - name: Health check pós-deploy
+        run: |
+          sleep 8
+          for i in 1 2 3 4 5; do
+            if curl -fsS http://localhost:8081/healthz > /dev/null 2>&1; then
+              echo "✅ Health check OK"
+              exit 0
+            fi
+            echo "⏳ Tentativa $i/5..."
+            sleep 5
+          done
+          echo "❌ Health check falhou — logs do container:"
+          docker logs openerp-web --tail=80 || true
+          exit 1

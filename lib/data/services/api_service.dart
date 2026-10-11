@@ -1,17 +1,20 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:front_openerp/core/config/api_config.dart';
 import 'package:front_openerp/data/repositories/local_storage.dart';
 import 'package:uuid/uuid.dart';
 
 class ApiService {
-  static const String baseUrl = 'https://mcp-server.etoolstec.com.br/api/v1';
-  // static const String baseUrl = 'http://localhost:8080/api/v1';
+  // static const String baseUrl = 'https://mcp-server.etoolstec.com.br/api/v1';
+  //  static const String baseUrl = 'http://localhost:8082/api/v1';
+  static String get baseUrl => ApiConfig.baseUrl;
   static const String defaultTenantId = '0';
 
   late final Dio _dio;
   final Uuid _uuid = const Uuid();
 
   ApiService() {
+    ApiConfig.printConfig();
     _dio = Dio(
       BaseOptions(
         baseUrl: baseUrl,
@@ -47,10 +50,12 @@ class ApiService {
           return handler.next(options);
         },
         onError: (error, handler) async {
-          // Se token expirou (401), tentar renovar
-          if (error.response?.statusCode == 401) {
-            // TODO: Implementar refresh token
-            // Por enquanto, apenas limpar token
+          final code = error.response?.statusCode;
+          final path = error.requestOptions.path;
+          if (path.contains('/login')) {
+            return handler.next(error);
+          }
+          if (code == 401 || code == 403) {
             await _clearToken();
           }
           return handler.next(error);
@@ -113,9 +118,9 @@ class ApiService {
     }
   }
 
-  Future<Response> delete(String path, {Map<String, dynamic>? queryParameters, Options? options}) async {
+  Future<Response> delete(String path, {dynamic data, Map<String, dynamic>? queryParameters, Options? options}) async {
     try {
-      return await _dio.delete(path, queryParameters: queryParameters, options: options);
+      return await _dio.delete(path, data: data, queryParameters: queryParameters, options: options);
     } on DioException catch (e) {
       throw _handleError(e);
     }

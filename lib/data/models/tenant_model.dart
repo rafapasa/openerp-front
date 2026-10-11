@@ -1,4 +1,5 @@
 import 'package:front_openerp/core/helpers/json_helper.dart';
+import 'package:front_openerp/data/models/tenant_llm_config.dart';
 
 class TenantModel {
   final int? id;
@@ -12,6 +13,8 @@ class TenantModel {
   final String? whatsappPhoneId;
   final String? whatsappDisplayNumber;
   final bool ativo;
+  final int? clienteBalcaoId;
+  final TenantLlmConfig? llmConfig;
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
@@ -27,6 +30,8 @@ class TenantModel {
     this.whatsappPhoneId,
     this.whatsappDisplayNumber,
     this.ativo = true,
+    this.clienteBalcaoId,
+    this.llmConfig,
     this.createdAt,
     this.updatedAt,
   });
@@ -44,6 +49,7 @@ class TenantModel {
       whatsappPhoneId: json['whatsapp_phone_id'],
       whatsappDisplayNumber: json['whatsapp_display_number'],
       ativo: JsonHelper.toBool(json['ativo'] ?? json['active'], fallback: true),
+      llmConfig: json['llm_config'] == null ? null : TenantLlmConfig.fromJson(json['llm_config']),
       createdAt: JsonHelper.toDateTime(json['created_at']),
       updatedAt: JsonHelper.toDateTime(json['updated_at']),
     );
@@ -62,6 +68,7 @@ class TenantModel {
       'whatsapp_phone_id': whatsappPhoneId,
       'whatsapp_display_number': whatsappDisplayNumber,
       'ativo': ativo,
+      if (llmConfig != null) 'llm_config': llmConfig!.toApiJson(),
     };
   }
 
@@ -77,6 +84,8 @@ class TenantModel {
     String? whatsappPhoneId,
     String? whatsappDisplayNumber,
     bool? ativo,
+    int? clienteBalcaoId,
+    TenantLlmConfig? llmConfig,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -92,6 +101,8 @@ class TenantModel {
       whatsappPhoneId: whatsappPhoneId ?? this.whatsappPhoneId,
       whatsappDisplayNumber: whatsappDisplayNumber ?? this.whatsappDisplayNumber,
       ativo: ativo ?? this.ativo,
+      clienteBalcaoId: clienteBalcaoId ?? this.clienteBalcaoId,
+      llmConfig: llmConfig ?? this.llmConfig,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );

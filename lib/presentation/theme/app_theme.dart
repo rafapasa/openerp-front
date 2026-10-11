@@ -1,5 +1,6 @@
 // lib/presentation/theme/app_theme.dart
 import 'package:flutter/material.dart';
+
 import 'app_colors.dart';
 
 class AppTheme {
@@ -17,11 +18,7 @@ class AppTheme {
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: false,
-        titleTextStyle: TextStyle(
-          color: AppColors.textDark,
-          fontSize: 18,
-          fontWeight: FontWeight.w700,
-        ),
+        titleTextStyle: TextStyle(color: AppColors.textDark, fontSize: 18, fontWeight: FontWeight.w700),
         iconTheme: IconThemeData(color: AppColors.textDark),
       ),
       cardTheme: const CardThemeData(
@@ -77,36 +74,24 @@ class AppTheme {
 
   // Decorações reutilizáveis tipo "classe CSS"
   static BoxDecoration get cardDecoration => BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      );
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(16),
+    border: Border.all(color: AppColors.border),
+    boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 10, offset: const Offset(0, 4))],
+  );
 
   static BoxDecoration get cardDecorationElevated => BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      );
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(20),
+    boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 16, offset: const Offset(0, 4))],
+  );
 
   static BoxDecoration avatarDecoration(Color color) => BoxDecoration(
-        gradient: LinearGradient(
-          colors: [color, color.withValues(alpha: 0.7)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(26),
-      );
+    gradient: LinearGradient(
+      colors: [color, color.withValues(alpha: 0.7)],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ),
+    borderRadius: BorderRadius.circular(26),
+  );
 }

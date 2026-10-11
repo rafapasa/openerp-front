@@ -8,6 +8,7 @@ class UsuarioModel {
   final String? nome;
   final String? token;
   final String? tokenExpires;
+  final String? role;
   final List<TenantModel>? tenants; // ← Lista de tenants disponíveis
   final int? tenantAtivoId; // ← Tenant que o usuário está usando
 
@@ -17,6 +18,7 @@ class UsuarioModel {
     this.nome,
     this.token,
     this.tokenExpires,
+    this.role,
     this.tenants,
     this.tenantAtivoId,
   });
@@ -34,6 +36,7 @@ class UsuarioModel {
       nome: json['nome'],
       token: json['token'],
       tokenExpires: json['tokenExpires'],
+      role: json['role'],
       tenants: tenants,
       tenantAtivoId: json['tenant_ativo_id'],
     );
@@ -47,8 +50,9 @@ class UsuarioModel {
       nome: conta.nome.isEmpty ? null : conta.nome,
       token: conta.token,
       tokenExpires: conta.expiresAt,
+      role: conta.role,
       tenants: null,
-      tenantAtivoId: conta.tenantId,
+      tenantAtivoId: conta.tenant.id,
     );
   }
 
@@ -58,6 +62,7 @@ class UsuarioModel {
     'nome': nome,
     'token': token,
     'tenants': tenants?.map((e) => e.toJson()).toList(),
+    'role': role,
     'tenant_ativo_id': tenantAtivoId,
   };
 

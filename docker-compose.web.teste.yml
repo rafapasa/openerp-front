@@ -1,0 +1,15 @@
+services:
+  openerp-web-teste:
+    image: ${DOCKER_USERNAME:-rafapasa}/openerp-web:${IMAGE_TAG:-test}
+    container_name: openerp-web-teste
+    hostname: openerp-web-teste
+    restart: unless-stopped
+    ports:
+      - "${WEB_PORT:-8083}:80"
+    networks:
+      - mcp-network
+
+networks:
+  mcp-network:
+    external: true
+    name: mcp-network

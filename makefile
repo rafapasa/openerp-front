@@ -3,328 +3,182 @@
 # Projeto Flutter - Dashboard Conversation Commerce
 # ============================================================
 
-# Variáveis
 PROJECT_NAME = front_openerp
-FLUTTER = flutter
-DART = dart
-PUB = flutter pub
+FLUTTER ?= flutter
+DART ?= dart
+PUB = $(FLUTTER) pub
 GIT = git
 MSG ?= "Atualização do projeto $(PROJECT_NAME)"
+COMPOSE_WEB_TESTE := docker-compose.web.teste.yml
 
-# Cores para output
+# Compile-time Flutter (String.fromEnvironment). Nao e env do container.
+API_BASE_URL_PROD ?= https://mcp-server.etoolstec.com.br/api/v1
+API_BASE_URL_DEV  ?= https://teste.b.etoolstec.com.br/api/v1
+DART_DEFINE_PROD = --dart-define=ENVIRONMENT=prod --dart-define=API_BASE_URL=$(API_BASE_URL_PROD)
+DART_DEFINE_DEV  = --dart-define=ENVIRONMENT=dev --dart-define=API_BASE_URL=$(API_BASE_URL_DEV)
+
 GREEN = \033[0;32m
 YELLOW = \033[0;33m
 BLUE = \033[0;34m
 RED = \033[0;31m
-NC = \033[0m # No Color
+NC = \033[0m
 
-# ============================================================
-# 📦 HELP - Tarefas disponíveis
-# ============================================================
 help: ## Mostra esta ajuda
 	@echo "$(BLUE)📋 Comandos disponíveis para $(PROJECT_NAME)$(NC)"
 	@echo ""
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
 		awk 'BEGIN {FS = ":.*?## "}; {printf "$(GREEN)%-20s$(NC) %s\n", $$1, $$2}'
-	@echo ""
-	@echo "$(YELLOW)Exemplos:$(NC)"
-	@echo "  make run-web       - Rodar no navegador"
-	@echo "  make run-web-ssh   - Rodar web server exposto na rede (SSH)"
-	@echo "  make build-apk     - Gerar APK para Android"
-	@echo "  make clean         - Limpar projeto"
 
-# ============================================================
-# 🚀 EXECUÇÃO
-# ============================================================
-
-run: ## Rodar em todas as plataformas (web + desktop + mobile)
-	@echo "$(BLUE)🚀 Rodando $(PROJECT_NAME)...$(NC)"
+run: ## Rodar em todas as plataformas
 	$(FLUTTER) run
 
-run-web: ## Rodar no navegador (Chrome)
-	@echo "$(BLUE)🌐 Rodando no Chrome...$(NC)"
-	$(FLUTTER) run -d chrome
+run-web: ## Rodar no Chrome
+	$(FLUTTER) run -d chrome $(DART_DEFINE_DEV)
 
-run-web-ssh: ## Rodar web server exposto na rede (acesso via SSH)
-	@echo "$(BLUE)🌐 Rodando web server em http://0.0.0.0:8080...$(NC)"
+run-web-ssh: ## Rodar web server exposto na rede
 	$(FLUTTER) run -d web-server --web-hostname 0.0.0.0 --web-port 8080
 
 run-linux: ## Rodar no Linux Desktop
-	@echo "$(BLUE)🐧 Rodando no Linux Desktop...$(NC)"
 	$(FLUTTER) run -d linux
 
-run-android: ## Rodar no Android (emulador ou dispositivo)
-	@echo "$(BLUE)📱 Rodando no Android...$(NC)"
+run-android: ## Rodar no Android
 	$(FLUTTER) run -d android
 
-run-ios: ## Rodar no iOS (requer macOS)
-	@echo "$(BLUE)🍎 Rodando no iOS...$(NC)"
+run-ios: ## Rodar no iOS
 	$(FLUTTER) run -d ios
 
-run-profile: ## Rodar em modo profile (para análise de performance)
-	@echo "$(BLUE)📊 Rodando em modo profile...$(NC)"
+run-profile: ## Rodar em modo profile
 	$(FLUTTER) run --profile
 
-run-release: ## Rodar em modo release (otimizado)
-	@echo "$(BLUE)🚀 Rodando em modo release...$(NC)"
+run-release: ## Rodar em modo release
 	$(FLUTTER) run --release
-
-# ============================================================
-# 🏗️ BUILD
-# ============================================================
 
 build: build-web build-apk ## Build para todas as plataformas
 
 build-web: ## Build para Web (release)
-	@echo "$(BLUE)🌐 Buildando para Web...$(NC)"
-	$(FLUTTER) build web --release
-	@echo "$(GREEN)✅ Build Web concluído!$(NC)"
-	@echo "📁 Local: build/web/"
+	$(FLUTTER) build web --release --no-wasm-dry-run $(DART_DEFINE_PROD)
 
-build-apk: ## Build APK para Android (release)
-	@echo "$(BLUE)📱 Buildando APK para Android...$(NC)"
+build-apk: ## Build APK para Android
 	$(FLUTTER) build apk --release
-	@echo "$(GREEN)✅ APK concluído!$(NC)"
-	@echo "📁 Local: build/app/outputs/flutter-apk/app-release.apk"
 
-build-appbundle: ## Build App Bundle para Android (Google Play)
-	@echo "$(BLUE)📱 Buildando App Bundle...$(NC)"
+build-appbundle: ## Build App Bundle para Android
 	$(FLUTTER) build appbundle --release
-	@echo "$(GREEN)✅ App Bundle concluído!$(NC)"
-	@echo "📁 Local: build/app/outputs/bundle/release/app-release.aab"
 
 build-linux: ## Build para Linux Desktop
-	@echo "$(BLUE)🐧 Buildando para Linux...$(NC)"
 	$(FLUTTER) build linux --release
-	@echo "$(GREEN)✅ Build Linux concluído!$(NC)"
-	@echo "📁 Local: build/linux/x64/release/bundle/"
 
-build-windows: ## Build para Windows Desktop
-	@echo "$(BLUE)🪟 Buildando para Windows...$(NC)"
-	$(FLUTTER) build windows --release
-	@echo "$(GREEN)✅ Build Windows concluído!$(NC)"
-	@echo "📁 Local: build/windows/x64/runner/Release/"
-
-build-macos: ## Build para macOS Desktop
-	@echo "$(BLUE)🍎 Buildando para macOS...$(NC)"
-	$(FLUTTER) build macos --release
-	@echo "$(GREEN)✅ Build macOS concluído!$(NC)"
-
-# ============================================================
-# 🧹 LIMPEZA
-# ============================================================
-
-clean: ## Limpar arquivos temporários e builds
-	@echo "$(YELLOW)🧹 Limpando projeto...$(NC)"
+clean: ## Limpar arquivos temporários
 	$(FLUTTER) clean
-	@echo "$(GREEN)✅ Projeto limpo!$(NC)"
 
 clean-all: clean ## Limpar tudo (incluindo cache do pub)
-	@echo "$(YELLOW)🧹 Limpando cache do pub...$(NC)"
-	rm -rf .dart_tool/
-	rm -rf build/
-	rm -rf pubspec.lock
+	rm -rf .dart_tool/ build/ pubspec.lock
 	$(FLUTTER) pub get
-	@echo "$(GREEN)✅ Tudo limpo!$(NC)"
 
-# ============================================================
-# 📦 DEPENDÊNCIAS
-# ============================================================
-
-deps: ## Instalar/atualizar dependências
-	@echo "$(BLUE)📦 Instalando dependências...$(NC)"
+deps: ## Instalar dependências
 	$(PUB) get
-	@echo "$(GREEN)✅ Dependências instaladas!$(NC)"
 
-deps-upgrade: ## Atualizar dependências para as últimas versões
-	@echo "$(BLUE)📦 Atualizando dependências...$(NC)"
+deps-upgrade: ## Atualizar dependências
 	$(PUB) upgrade --major-versions
-	@echo "$(GREEN)✅ Dependências atualizadas!$(NC)"
 
 deps-outdated: ## Verificar dependências desatualizadas
-	@echo "$(BLUE)📊 Verificando dependências desatualizadas...$(NC)"
 	$(PUB) outdated
 
-# ============================================================
-# 🔧 ANÁLISE E TESTES
-# ============================================================
-
-analyze: ## Analisar código (lint)
-	@echo "$(BLUE)🔍 Analisando código...$(NC)"
+analyze: ## Analisar código
 	$(FLUTTER) analyze
-	@echo "$(GREEN)✅ Análise concluída!$(NC)"
 
 test: ## Executar testes
-	@echo "$(BLUE)🧪 Executando testes...$(NC)"
 	$(FLUTTER) test
-	@echo "$(GREEN)✅ Testes concluídos!$(NC)"
 
 test-coverage: ## Executar testes com cobertura
-	@echo "$(BLUE)📊 Executando testes com cobertura...$(NC)"
 	$(FLUTTER) test --coverage
-	@echo "$(GREEN)✅ Cobertura gerada!$(NC)"
-	@echo "📁 Local: coverage/"
 
 format: ## Formatar código
-	@echo "$(BLUE)🎨 Formatando código...$(NC)"
 	$(DART) format lib/
-	@echo "$(GREEN)✅ Código formatado!$(NC)"
 
-# ============================================================
-# 🛠️ DESENVOLVIMENTO
-# ============================================================
+dev: clean deps run-web ## Setup completo
 
-dev: clean deps run-web ## Setup completo para desenvolvimento
-
-watch: ## Rodar em modo watch (hot reload)
-	@echo "$(BLUE)👀 Rodando em modo watch...$(NC)"
+watch: ## Rodar em modo watch
 	$(FLUTTER) run
 
-# ============================================================
-# 📱 GERAR ARQUIVOS (se usar build_runner)
-# ============================================================
-
 gen: ## Gerar arquivos (build_runner)
-	@echo "$(BLUE)⚙️  Gerando arquivos...$(NC)"
 	$(DART) run build_runner build --delete-conflicting-outputs
 
 gen-watch: ## Gerar arquivos em modo watch
-	@echo "$(BLUE)👀 Gerando arquivos em watch...$(NC)"
 	$(DART) run build_runner watch --delete-conflicting-outputs
 
-# ============================================================
-# 🗄️ SERVIDOR DE DESENVOLVIMENTO
-# ============================================================
-
 serve: build-web ## Servir build web localmente
-	@echo "$(BLUE)🌐 Servindo build web...$(NC)"
 	cd build/web && python3 -m http.server 8080
-	@echo "$(GREEN)✅ Servidor rodando em http://localhost:8080$(NC)"
-
-# ============================================================
-# 🚀 INSTALAÇÃO DO PROJETO
-# ============================================================
 
 setup: ## Configurar projeto do zero
-	@echo "$(BLUE)⚙️  Configurando projeto...$(NC)"
-	@echo "$(GREEN)1/5$(NC) Limpando..."
 	$(MAKE) clean
-	@echo "$(GREEN)2/5$(NC) Instalando dependências..."
 	$(MAKE) deps
-	@echo "$(GREEN)3/5$(NC) Verificando flutter..."
 	$(FLUTTER) doctor
-	@echo "$(GREEN)4/5$(NC) Analisando código..."
 	$(MAKE) analyze
-	@echo "$(GREEN)5/5$(NC) Projeto pronto!"
-	@echo ""
-	@echo "$(GREEN)🎉 Projeto configurado com sucesso!$(NC)"
-	@echo ""
-	@echo "$(YELLOW)Próximos passos:$(NC)"
-	@echo "  make run-web      - Rodar no navegador"
-	@echo "  make build-apk    - Gerar APK"
-	@echo "  make help         - Ver todos os comandos"
+	@echo "$(GREEN)🎉 Projeto configurado!$(NC)"
 
-# ============================================================
-# 🔐 VARIÁVEIS DE AMBIENTE
-# ============================================================
-
-env: ## Mostrar variáveis de ambiente do Flutter
-	@echo "$(BLUE)📋 Variáveis de ambiente Flutter:$(NC)"
+env: ## Mostrar versões
 	$(FLUTTER) --version
-	@echo ""
-	$(FLUTTER) doctor -v | grep -E "(Android|Chrome|Linux|Connected)"
 
-# ============================================================
-# 📝 LOGS
-# ============================================================
-
-logs: ## Mostrar logs do Flutter
-	@echo "$(BLUE)📝 Logs do Flutter:$(NC)"
+logs: ## Logs do Flutter
 	$(FLUTTER) logs
 
-# ============================================================
-# 🧪 PUB COMMANDS
-# ============================================================
-
 pub-cache: ## Limpar cache do pub
-	@echo "$(YELLOW)🧹 Limpando cache do pub...$(NC)"
 	$(PUB) cache repair
-	@echo "$(GREEN)✅ Cache limpo!$(NC)"
 
-# ============================================================
-# 📦 RELEASE
-# ============================================================
+release: build-web build-apk build-linux ## Build de release completo
+	@echo "$(GREEN)🎉 Builds geradas!$(NC)"
 
-release: build-web build-apk build-linux ## Gerar todas as builds de release
-	@echo "$(GREEN)🎉 Todas as builds geradas!$(NC)"
-	@echo ""
-	@echo "$(YELLOW)📁 Arquivos gerados:$(NC)"
-	@echo "  Web: build/web/"
-	@echo "  Android: build/app/outputs/flutter-apk/app-release.apk"
-	@echo "  Linux: build/linux/x64/release/bundle/"
-
-# ============================================================
-# PHONY (evita conflitos com arquivos de mesmo nome)
-# ============================================================
-.PHONY: help run run-web run-web-ssh run-linux run-android run-ios run-profile run-release \
-        build build-web build-apk build-appbundle build-linux build-windows build-macos \
-        clean clean-all deps deps-upgrade deps-outdated \
-        analyze test test-coverage format \
-        dev watch gen gen-watch serve \
-        setup env logs pub-cache release
-
-
-# ============================================================
-# 📦 GIT
-# ============================================================
-
-git-up: ## Add commit e push das alterações no git
-	@echo "$(YELLOW)🧹 git add...$(NC)"
+git-up: ## Add + commit + push
 	$(GIT) add .
-	@echo "$(YELLOW)🧹 git commit...$(NC)"
 	$(GIT) commit -m ${MSG}
-	@echo "$(YELLOW)🧹 git push...$(NC)"
 	$(GIT) push origin main
-	@echo "$(GREEN)✅ Alterações adicionadas ao git!$(NC)"
 
+git-status: ## Status do git
+	git status -sb && git diff --stat
 
-# ============================================================
-# PHONY (evita conflitos com arquivos de mesmo nome)
-# ============================================================
-.PHONY: help run run-web run-web-ssh run-linux run-android run-ios run-profile run-release \
-        build build-web build-apk build-appbundle build-linux build-windows build-macos \
-        clean clean-all deps deps-upgrade deps-outdated \
-        analyze test test-coverage format \
-        dev watch gen gen-watch serve \
-        setup env logs pub-cache release \
-		git-up
+git-add: ## Adicionar todos os arquivos
+	git add -A && git status -sb
 
+git-commit: ## Commit
+ifndef MSG
+	$(error Use: make git-commit MSG='tipo: mensagem')
+endif
+	git add -A
+	git commit -m "$(MSG)"
 
-# ============================================================
-# DEPLOY OCI — openerp.etoolstec.com.br
-# Mesmo modelo do back: build-push exige tag; deploy assume latest
-# ============================================================
+git-push: ## Push
+	git push -u origin HEAD
 
-DOCKER_USERNAME := rafapasa
+git-ciclo: ## Volta o worktree para ciclo (nao usa main)
+	git stash push -u -m "wip-ciclo" -- lib/presentation/pages/produtos/uso_edit_dialog.dart lib/presentation/pages/produtos/uso_nn_combo.dart makefile || true
+	git checkout ciclo
+	git stash pop || true
+	git status -sb
+
+git-branch-6: ## Criar branch front-6
+	git checkout -B front-6
+
+git-restore-dash: ## Restaurar dashboard
+	git checkout -- lib/presentation/pages/dashboard/dashboard_page.dart
+
+DOCKER_USERNAME ?= rafapasa
 IMAGE_TAG       ?= latest
 WEB_IMAGE       := $(DOCKER_USERNAME)/openerp-web
 DOCKERFILE_WEB  := Dockerfile.web
 COMPOSE_WEB     := docker-compose.web.yml
-NO_CACHE        ?=
-
-.PHONY: login build-push deploy logs-web
+NO_CACHE        ?= --no-cache
 
 login: ## docker login no Hub
 	docker login -u $(DOCKER_USERNAME)
 
-build-push: ## flutter build web no host + image nginx linux/arm64 (IMAGE_TAG=x.y.z)
+build-push: ## Flutter build web + docker build ARM64 + push
 ifeq ($(IMAGE_TAG),latest)
 	$(error Use: make build-push IMAGE_TAG=0.1.0 — não pode buildar só latest)
 endif
-	@echo "$(BLUE)🌐 flutter build web --release$(NC)"
-	$(FLUTTER) build web --release --no-wasm-dry-run
-	@test -f build/web/index.html || (echo "$(RED)falhou: build/web/index.html$(NC)"; exit 1)
-	@echo "$(BLUE)🐳 Build ARM64 $(WEB_IMAGE):$(IMAGE_TAG) + latest$(NC)"
+	@echo "🌐 flutter build web --release"
+	$(FLUTTER) build web --release --no-wasm-dry-run $(DART_DEFINE_PROD)
+	@test -f build/web/index.html || (echo "❌ falhou: build/web/index.html"; exit 1)
+	@echo "🐳 Build ARM64 $(WEB_IMAGE):$(IMAGE_TAG) + latest"
 	DOCKER_BUILDKIT=1 docker build $(NO_CACHE) \
 		--platform linux/arm64 \
 		-f $(DOCKERFILE_WEB) \
@@ -333,15 +187,68 @@ endif
 		.
 	docker push $(WEB_IMAGE):$(IMAGE_TAG)
 	docker push $(WEB_IMAGE):latest
-	@echo "$(GREEN)✅ $(WEB_IMAGE):$(IMAGE_TAG) + latest (linux/arm64) no Hub$(NC)"
+	@echo "✅ $(WEB_IMAGE):$(IMAGE_TAG) + latest (linux/arm64) no Hub"
 
-deploy: ## Sobe openerp-web na mcp-network (IMAGE_TAG opcional, default latest)
-	@echo "$(BLUE)🚀 Deploy $(WEB_IMAGE):$(IMAGE_TAG) → openerp.etoolstec.com.br$(NC)"
+deploy: ## Sobe openerp-web na mcp-network
+	@echo "🚀 Deploy $(WEB_IMAGE):$(IMAGE_TAG) → openerp.etoolstec.com.br"
 	docker network create mcp-network || true
-	IMAGE_TAG=$(IMAGE_TAG) docker compose -f $(COMPOSE_WEB) pull openerp-web
-	IMAGE_TAG=$(IMAGE_TAG) docker compose -f $(COMPOSE_WEB) up -d --pull always --no-deps openerp-web
+	IMAGE_TAG=$(IMAGE_TAG) DOCKER_USERNAME=$(DOCKER_USERNAME) docker compose -f $(COMPOSE_WEB) pull openerp-web
+	IMAGE_TAG=$(IMAGE_TAG) DOCKER_USERNAME=$(DOCKER_USERNAME) docker compose -f $(COMPOSE_WEB) up -d --pull always --no-deps openerp-web
 	@docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" | grep openerp-web || true
-	@echo "$(GREEN)✅ openerp-web no ar$(NC)"
+	@echo "✅ openerp-web no ar"
 
-logs-web: ## Logs do container openerp-web
+
+.PHONY: build-push-t
+build-push-t: ## Flutter build web (API teste) + docker ARM64 + push :test
+	@echo "🌐 flutter build web --release API=$(API_BASE_URL_DEV)"
+	$(FLUTTER) build web --release --no-wasm-dry-run $(DART_DEFINE_DEV)
+	@test -f build/web/index.html || (echo "❌ falhou: build/web/index.html"; exit 1)
+	@echo "🐳 Build ARM64 $(WEB_IMAGE):test"
+	DOCKER_BUILDKIT=1 docker build $(NO_CACHE) \
+		--platform linux/arm64 \
+		-f $(DOCKERFILE_WEB) \
+		-t $(WEB_IMAGE):test \
+		.
+	docker push $(WEB_IMAGE):test
+	@echo "✅ $(WEB_IMAGE):test enviado (API $(API_BASE_URL_DEV))"
+
+.PHONY: deploy-t
+deploy-t: ## Sobe openerp-web-teste na mcp-network (porta 8083)
+	@echo "🚀 Deploy $(WEB_IMAGE):test (API $(API_BASE_URL_DEV))"
+	IMAGE_TAG=test DOCKER_USERNAME=$(DOCKER_USERNAME) WEB_PORT=8083 \
+		docker compose -f $(COMPOSE_WEB_TESTE) pull openerp-web-teste
+	IMAGE_TAG=test DOCKER_USERNAME=$(DOCKER_USERNAME) WEB_PORT=8083 \
+		docker compose -f $(COMPOSE_WEB_TESTE) up -d --pull always --no-deps openerp-web-teste
+	@docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" | grep openerp-web-teste || true
+	@echo "✅ openerp-web-teste no ar (host:8083 → nginx :80)"
+
+logs-web-teste: ## Logs do container de teste
+	docker logs -f openerp-web-teste --tail=100
+
+logs-web: ## Logs do container
 	docker logs -f openerp-web --tail=100
+
+.PHONY: help run run-web run-web-ssh run-linux run-android run-ios run-profile run-release \
+        build build-web build-apk build-appbundle build-linux \
+        clean clean-all deps deps-upgrade deps-outdated \
+        analyze test test-coverage format \
+        dev watch gen gen-watch serve \
+        setup env logs pub-cache release \
+        git-up git-status git-add git-commit git-push git-branch-6 git-restore-dash \
+        login build-push deploy logs-web \
+        build-push-t deploy-t logs-web-teste
+probe-emp:
+	ls lib/presentation/pages | head
+	find lib -iname '*empresa*' -o -iname '*tenant*' | head -40
+
+
+test-llm-tab:
+	export PATH="$$HOME/flutter/bin:$$PATH"; flutter test test/tenant_llm_config_test.dart
+	export PATH="$$HOME/flutter/bin:$$PATH"; dart analyze lib/data/models/tenant_llm_config.dart lib/data/models/tenant_model.dart lib/presentation/pages/tenants/tenant_llm_tab.dart lib/presentation/pages/tenants/tenant_detalhe_modal.dart
+
+commit-llm-tab:
+	export PATH="$$HOME/flutter/bin:$$PATH"; dart analyze lib/data/services/tenant_service.dart lib/data/repositories/tenant_repository.dart lib/presentation/providers/tenant_provider.dart
+	git add lib/data/models/tenant_llm_config.dart lib/data/models/tenant_model.dart lib/data/services/tenant_service.dart lib/data/repositories/tenant_repository.dart lib/presentation/providers/tenant_provider.dart lib/presentation/pages/tenants/tenant_llm_tab.dart lib/presentation/pages/tenants/tenant_detalhe_modal.dart test/tenant_llm_config_test.dart
+	git checkout -- makefile Makefile || true
+	git commit -m "feat(tenants): aba LLM no modal de empresa (#31)"
+	git push origin ciclo

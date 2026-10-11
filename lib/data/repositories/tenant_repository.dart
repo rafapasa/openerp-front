@@ -1,5 +1,7 @@
 // lib/data/repositories/tenant_repository.dart
+import 'package:front_openerp/data/models/tenant_llm_config.dart';
 import 'package:front_openerp/data/models/tenant_model.dart';
+import 'package:front_openerp/data/models/tenant_notificacao_model.dart';
 import 'package:front_openerp/data/services/tenant_service.dart';
 
 class TenantRepository {
@@ -39,11 +41,31 @@ class TenantRepository {
     }
   }
 
+  Future<TenantModel> updateLlmConfig(int id, TenantLlmConfig config) {
+    return _service.atualizarLlmConfig(id, config);
+  }
+
   Future<void> delete(int id) async {
     try {
       await _service.excluir(id);
     } catch (e) {
       throw Exception('Erro ao excluir empresa: $e');
     }
+  }
+
+  Future<List<TenantNotificacaoModel>> listarNotificacoes(int tenantId) {
+    return _service.listarNotificacoes(tenantId);
+  }
+
+  Future<TenantNotificacaoModel> criarNotificacao(int tenantId, Map<String, dynamic> body) {
+    return _service.criarNotificacao(tenantId, body);
+  }
+
+  Future<TenantNotificacaoModel> atualizarNotificacao(int tenantId, int notifId, Map<String, dynamic> body) {
+    return _service.atualizarNotificacao(tenantId, notifId, body);
+  }
+
+  Future<void> excluirNotificacao(int tenantId, int notifId) {
+    return _service.excluirNotificacao(tenantId, notifId);
   }
 }

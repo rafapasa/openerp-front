@@ -1,7 +1,7 @@
 name: front_openerp
 description: "Dashboard para conversão de conversas do WhatsApp em compras (Conversation Commerce)"
 publish_to: "none"
-version: 1.0.0+1
+version: 0.4.1+1
 
 environment:
   sdk: "^3.13.0"
@@ -10,50 +10,33 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # Ícones (substituindo flutter_icons)
   cupertino_icons: ^1.0.8
 
-  # ============================================================
-  # 🔧 Gerenciamento de Estado e Navegação
-  # ============================================================
-
+  # Gerenciamento de Estado e Navegação
   provider: ^6.1.2
   go_router: ^18.0.1
 
-  # ============================================================
-  # 🌐 HTTP Client e API
-  # ============================================================
-
+  # HTTP Client e API
   dio: ^5.7.0
   shared_preferences: ^2.3.2
 
-  # ============================================================
-  # 📊 UI, Gráficos e Design System
-  # ============================================================
-
+  # UI, Gráficos e Design System
   fl_chart: ^1.2.0
   google_fonts: ^8.2.1
   intl: ^0.20.3
   lottie: ^3.1.2
 
-  # ============================================================
-  # 📱 Utilitários e Ferramentas
-  # ============================================================
-
+  # Utilitários e Ferramentas
   uuid: ^4.5.1
   validators: ^3.0.0
   mask_text_input_formatter: ^2.9.0
 
-  # ============================================================
-  # 🛡️ Segurança e Performance
-  # ============================================================
-
+  # Segurança e Performance
   crypto: ^3.0.3
   flutter_cache_manager: ^3.4.1
 
   # Banco de dados local
   hive: ^2.2.3
-
   hive_flutter: ^1.1.0
 
   # Para converter objetos
@@ -67,16 +50,13 @@ dev_dependencies:
   flutter_lints: ^6.0.0
 
   hive_generator: ^2.0.1
-
   build_runner: ^2.4.9
 
 flutter:
   uses-material-design: true
+  
 
   assets:
     - assets/images/
     - assets/images/Icone_azul_500x500.png
     - assets/images/Logo_fundo_branco.jpg
-    - assets/fonts/
-    - assets/animations/
-    - assets/icons/

@@ -64,4 +64,34 @@ class ClienteModel {
     'updated_at': updatedAt.toIso8601String(),
     'enderecos': enderecos?.map((e) => e.toJson()).toList(),
   };
+
+  ClienteModel copyWith({
+    int? id,
+    int? tenantId,
+    String? telefone,
+    String? nome,
+    String? nomePerfil,
+    String? email,
+    String? inscricaoFederal,
+    String? status,
+    DateTime? ultimoPedidoAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    List<EnderecoModel>? enderecos,
+  }) {
+    return ClienteModel(
+      id: id ?? this.id,
+      tenantId: tenantId ?? this.tenantId,
+      telefone: telefone ?? this.telefone,
+      nome: nome ?? this.nome,
+      nomePerfil: nomePerfil ?? this.nomePerfil,
+      email: email ?? this.email,
+      inscricaoFederal: inscricaoFederal ?? this.inscricaoFederal,
+      status: status ?? this.status,
+      ultimoPedidoAt: ultimoPedidoAt ?? this.ultimoPedidoAt,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      enderecos: enderecos ?? this.enderecos,
+    );
+  }
 }

@@ -3,6 +3,7 @@
 // e da conversão de uma conta (users[i]) para o UsuarioModel.
 import 'package:flutter_test/flutter_test.dart';
 import 'package:front_openerp/data/models/models.dart';
+import 'package:front_openerp/data/models/tenant_model.dart';
 
 void main() {
   group('LoginResultado.fromJson (LoginResponseList)', () {
@@ -15,7 +16,7 @@ void main() {
             'expires_at': '2026-09-06T12:00:00Z',
             'user': {
               'id': 1,
-              'tenant_id': 2,
+              'tenant': {'id': 2, 'nome': 'Tenant 2'},
               'nome': 'João',
               'email': 'joao@etoolstec.com.br',
               'role': 'admin',
@@ -34,7 +35,7 @@ void main() {
       expect(conta.token, 'jwt-abc');
       expect(conta.expiresAt, '2026-09-06T12:00:00Z');
       expect(conta.id, 1);
-      expect(conta.tenantId, 2);
+      expect(conta.tenant.id, 2);
       expect(conta.nome, 'João');
       expect(conta.email, 'joao@etoolstec.com.br');
       expect(conta.role, 'admin');
@@ -50,7 +51,7 @@ void main() {
             'expires_at': '2026-09-06T12:00:00Z',
             'user': {
               'id': 1,
-              'tenant_id': 1,
+              'tenant': {'id': 1, 'nome': 'Tenant 1'},
               'nome': 'João',
               'email': 'joao@etoolstec.com.br',
               'role': 'admin',
@@ -61,7 +62,7 @@ void main() {
             'expires_at': '2026-09-06T12:00:00Z',
             'user': {
               'id': 2,
-              'tenant_id': 3,
+              'tenant': {'id': 3, 'nome': 'Tenant 3'},
               'nome': 'João',
               'email': 'joao@etoolstec.com.br',
               'role': 'atendente',
@@ -76,18 +77,18 @@ void main() {
       expect(resultado.contas, hasLength(2));
       expect(resultado.possuiMultiplasContas, isTrue);
       expect(resultado.contas[0].token, 'jwt-tenant-1');
-      expect(resultado.contas[1].tenantId, 3);
+      expect(resultado.contas[1].tenant.id, 3);
       expect(resultado.contas[1].roleLabel, 'Atendente');
     });
   });
 
   group('LoginConta', () {
     test('toJson mantém a estrutura esperada pelo cache', () {
-      const conta = LoginConta(
+      final conta = LoginConta(
         token: 'jwt-x',
         expiresAt: '2026-09-06T12:00:00Z',
         id: 7,
-        tenantId: 9,
+        tenant: TenantModel(id: 9, nome: 'Tenant 9'),
         nome: 'Maria',
         email: 'maria@etoolstec.com.br',
         role: 'cozinha',
@@ -98,25 +99,25 @@ void main() {
       expect(json['expires_at'], '2026-09-06T12:00:00Z');
       final user = json['user'] as Map<String, dynamic>;
       expect(user['id'], 7);
-      expect(user['tenant_id'], 9);
+      expect(user['tenant']['id'], 9);
       expect(user['role'], 'cozinha');
       expect(conta.roleLabel, 'Cozinha');
 
       // Round-trip: de volta para LoginConta
       final reconvertida = LoginConta.fromJson(json);
       expect(reconvertida.id, conta.id);
-      expect(reconvertida.tenantId, conta.tenantId);
+      expect(reconvertida.tenant.id, conta.tenant.id);
       expect(reconvertida.token, conta.token);
     });
   });
 
   group('UsuarioModel.fromLoginConta', () {
     test('converte uma conta do login em UsuarioModel', () {
-      const conta = LoginConta(
+      final conta = LoginConta(
         token: 'jwt-abc',
         expiresAt: '2026-09-06T12:00:00Z',
         id: 42,
-        tenantId: 10,
+        tenant: TenantModel(id: 10, nome: 'Tenant 10'),
         nome: 'João',
         email: 'joao@etoolstec.com.br',
         role: 'admin',

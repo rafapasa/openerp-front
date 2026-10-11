@@ -8,36 +8,24 @@ class DashboardRepository {
 
   DashboardRepository(this._dashboardService);
 
-  // ============================================================
-  // 📊 Buscar Dashboard (com cache)
-  // ============================================================
-  Future<DashboardModel> getDashboard({bool forceRefresh = false}) async {
-    // Verificar se tem cache válido
-    if (!forceRefresh && LocalStorage.isCacheValid(LocalStorage.dashboardKey)) {
-      final cached = LocalStorage.getData<Map<String, dynamic>>(
-        LocalStorage.dashboardKey,
-      );
+  Future<DashboardModel> getDashboard({bool forceRefresh = false, DateTime? dataInicio, DateTime? dataFim}) async {
+    final useCache = dataInicio == null && dataFim == null;
+
+    if (useCache && !forceRefresh && LocalStorage.isCacheValid(LocalStorage.dashboardKey)) {
+      final cached = LocalStorage.getData<Map<String, dynamic>>(LocalStorage.dashboardKey);
       if (cached != null) {
         return DashboardModel.fromJson(cached);
       }
     }
 
-    // Buscar da API
     try {
-      final dashboard = await _dashboardService.getDashboard();
-
-      // Salvar no cache
-      await LocalStorage.saveData(
-        LocalStorage.dashboardKey,
-        dashboard.toJson(),
-      );
-
+      final dashboard = await _dashboardService.getDashboard(dataInicio: dataInicio, dataFim: dataFim);
+      if (useCache) {
+        await LocalStorage.saveData(LocalStorage.dashboardKey, dashboard.toJson());
+      }
       return dashboard;
     } catch (e) {
-      // Se falhou e tem cache antigo, usar mesmo assim
-      final cached = LocalStorage.getData<Map<String, dynamic>>(
-        LocalStorage.dashboardKey,
-      );
+      final cached = LocalStorage.getData<Map<String, dynamic>>(LocalStorage.dashboardKey);
       if (cached != null) {
         return DashboardModel.fromJson(cached);
       }
@@ -45,16 +33,10 @@ class DashboardRepository {
     }
   }
 
-  // ============================================================
-  // 🔄 Forçar atualização
-  // ============================================================
-  Future<DashboardModel> refreshDashboard() async {
-    return getDashboard(forceRefresh: true);
+  Future<DashboardModel> refreshDashboard({DateTime? dataInicio, DateTime? dataFim}) {
+    return getDashboard(forceRefresh: true, dataInicio: dataInicio, dataFim: dataFim);
   }
 
-  // ============================================================
-  // 🗑️ Limpar cache
-  // ============================================================
   Future<void> clearCache() async {
     await LocalStorage.clearCache(LocalStorage.dashboardKey);
   }

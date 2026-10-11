@@ -56,3 +56,6 @@ Este repositório é um app Flutter para dashboard de conversão de conversas do
 - [pubspec.yaml](pubspec.yaml)
 - [lib/main.dart](lib/main.dart)
 - [lib/presentation/providers/auth_provider.dart](lib/presentation/providers/auth_provider.dart)
+
+## UX
+Ver `docs/ux-patterns.md` (modal, quick edit, Criar/Salvar).

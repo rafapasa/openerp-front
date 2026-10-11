@@ -7,7 +7,7 @@ abstract class AppColors {
   static const primary = Color(0xFF184F9A); // Azul do "Tools"
   static const primaryDark = Color(0xFF0F2C5C); // Sidebar escura
   static const primaryLight = Color(0xFFE8EFFB);
-  
+
   static const accent = Color(0xFF00B050); // Verde do "e" com seta
   static const accentLight = Color(0xFFE6F9EE);
   static const accentDark = Color(0xFF00913C);

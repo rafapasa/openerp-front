@@ -1,5 +1,4 @@
-
-import '../core/helpers/json_helper.dart';
+import 'package:front_openerp/core/helpers/json_helper.dart';
 
 class ApiResponse<T> {
   final T data;
@@ -16,7 +15,13 @@ class PaginatedResponse<T> {
   final int page;
   final int limit;
   final int pages;
-  PaginatedResponse({required this.data, required this.total, required this.page, required this.limit, required this.pages});
+  PaginatedResponse({
+    required this.data,
+    required this.total,
+    required this.page,
+    required this.limit,
+    required this.pages,
+  });
   factory PaginatedResponse.fromJson(Map<String, dynamic> json, T Function(dynamic) fromJsonT) {
     final list = json['data'] is List ? json['data'] as List : [];
     return PaginatedResponse<T>(

@@ -1,10 +1,11 @@
 // lib/presentation/pages/tenants/tenants_page.dart
 // Refatorado eTools - Responsivo Web (tabela) + Mobile (cards)
 import 'package:flutter/material.dart';
-import 'package:front_openerp/presentation/pages/tenants/detalhe_tenant_page.dart';
+import 'package:front_openerp/presentation/pages/tenants/tenant_detalhe_modal.dart';
 import 'package:front_openerp/presentation/pages/tenants/form_tenant_page.dart';
 import 'package:front_openerp/presentation/providers/tenant_provider.dart';
 import 'package:provider/provider.dart';
+
 import '../../theme/app_colors.dart';
 import '../../theme/app_theme.dart';
 
@@ -73,9 +74,16 @@ class _TenantsPageState extends State<TenantsPage> {
                   children: [
                     Icon(Icons.error_outline, size: 64, color: Colors.red[300]),
                     const SizedBox(height: 16),
-                    const Text('Erro ao carregar empresas', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
+                    const Text(
+                      'Erro ao carregar empresas',
+                      style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+                    ),
                     const SizedBox(height: 8),
-                    Text(provider.error!, textAlign: TextAlign.center, style: const TextStyle(color: AppColors.textGrey)),
+                    Text(
+                      provider.error!,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: AppColors.textGrey),
+                    ),
                     const SizedBox(height: 20),
                     FilledButton.icon(
                       onPressed: () => provider.carregarTenants(),
@@ -93,7 +101,7 @@ class _TenantsPageState extends State<TenantsPage> {
           }).toList();
 
           return Padding(
-            padding: EdgeInsets.all(isWeb ? 24 : 0),
+            padding: EdgeInsets.zero,
             child: Column(
               children: [
                 // Toolbar
@@ -111,7 +119,10 @@ class _TenantsPageState extends State<TenantsPage> {
                                 hintText: 'Buscar empresa por nome ou CNPJ',
                                 prefixIcon: const Icon(Icons.search, size: 20),
                                 suffixIcon: _searchQuery.isNotEmpty
-                                    ? IconButton(icon: const Icon(Icons.clear, size: 18), onPressed: () => _searchController.clear())
+                                    ? IconButton(
+                                        icon: const Icon(Icons.clear, size: 18),
+                                        onPressed: () => _searchController.clear(),
+                                      )
                                     : const Icon(Icons.tune, size: 18),
                               ),
                             ),
@@ -119,10 +130,14 @@ class _TenantsPageState extends State<TenantsPage> {
                           if (isWeb) ...[
                             const SizedBox(width: 12),
                             FilledButton.icon(
-                              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const FormTenantPage())),
+                              onPressed: () =>
+                                  Navigator.push(context, MaterialPageRoute(builder: (_) => const FormTenantPage())),
                               icon: const Icon(Icons.add, size: 18),
                               label: const Text('Nova Empresa'),
-                              style: FilledButton.styleFrom(backgroundColor: AppColors.primary, padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14)),
+                              style: FilledButton.styleFrom(
+                                backgroundColor: AppColors.primary,
+                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                              ),
                             ),
                           ],
                         ],
@@ -130,16 +145,31 @@ class _TenantsPageState extends State<TenantsPage> {
                       const SizedBox(height: 12),
                       Row(
                         children: [
-                          Text('${filtered.length} empresas', style: const TextStyle(color: AppColors.textGrey, fontSize: 13, fontWeight: FontWeight.w500)),
+                          Text(
+                            '${filtered.length} empresas',
+                            style: const TextStyle(
+                              color: AppColors.textGrey,
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                           const Spacer(),
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(color: AppColors.successBg, borderRadius: BorderRadius.circular(20)),
-                            child: const Row(children: [
-                              Icon(Icons.circle, size: 8, color: AppColors.success),
-                              SizedBox(width: 4),
-                              Text('Sincronizado', style: TextStyle(color: AppColors.success, fontSize: 11, fontWeight: FontWeight.w700)),
-                            ]),
+                            decoration: BoxDecoration(
+                              color: AppColors.successBg,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: const Row(
+                              children: [
+                                Icon(Icons.circle, size: 8, color: AppColors.success),
+                                SizedBox(width: 4),
+                                Text(
+                                  'Sincronizado',
+                                  style: TextStyle(color: AppColors.success, fontSize: 11, fontWeight: FontWeight.w700),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -155,11 +185,17 @@ class _TenantsPageState extends State<TenantsPage> {
                             children: [
                               Icon(Icons.business_outlined, size: 64, color: Colors.grey[400]),
                               const SizedBox(height: 12),
-                              Text(provider.tenants.isEmpty ? 'Nenhuma empresa cadastrada' : 'Nenhum resultado', style: const TextStyle(fontWeight: FontWeight.w600)),
+                              Text(
+                                provider.tenants.isEmpty ? 'Nenhuma empresa cadastrada' : 'Nenhum resultado',
+                                style: const TextStyle(fontWeight: FontWeight.w600),
+                              ),
                               const SizedBox(height: 16),
                               if (provider.tenants.isEmpty)
                                 FilledButton.icon(
-                                  onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const FormTenantPage())),
+                                  onPressed: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (_) => const FormTenantPage()),
+                                  ),
                                   icon: const Icon(Icons.add),
                                   label: const Text('Criar empresa'),
                                 ),
@@ -167,8 +203,8 @@ class _TenantsPageState extends State<TenantsPage> {
                           ),
                         )
                       : isWeb
-                          ? _buildWebTable(filtered)
-                          : _buildMobileList(filtered),
+                      ? _buildWebTable(filtered)
+                      : _buildMobileList(filtered),
                 ),
               ],
             ),
@@ -201,7 +237,7 @@ class _TenantsPageState extends State<TenantsPage> {
             decoration: AppTheme.cardDecoration,
             child: InkWell(
               borderRadius: BorderRadius.circular(16),
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => DetalheTenantPage(tenant: tenant))),
+              onTap: () => showTenantDetalheModal(context, tenant),
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Row(
@@ -210,24 +246,45 @@ class _TenantsPageState extends State<TenantsPage> {
                       width: 52,
                       height: 52,
                       decoration: AppTheme.avatarDecoration(_getAvatarColor(tenant.nome)),
-                      child: Center(child: Text(_getInitials(tenant.nome), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 18))),
+                      child: Center(
+                        child: Text(
+                          _getInitials(tenant.nome),
+                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 18),
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 14),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(tenant.nome, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15), maxLines: 1, overflow: TextOverflow.ellipsis),
+                          Text(
+                            tenant.nome,
+                            style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                           const SizedBox(height: 6),
                           Row(
                             children: [
                               const Icon(Icons.badge_outlined, size: 14, color: AppColors.textGrey),
                               const SizedBox(width: 4),
-                              Expanded(child: Text(_formatCnpj(tenant.cnpj), style: const TextStyle(color: AppColors.textGrey, fontSize: 12.5))),
+                              Expanded(
+                                child: Text(
+                                  _formatCnpj(tenant.cnpj),
+                                  style: const TextStyle(color: AppColors.textGrey, fontSize: 12.5),
+                                ),
+                              ),
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                decoration: BoxDecoration(color: AppColors.successBg, borderRadius: BorderRadius.circular(20)),
-                                child: const Text('Ativo', style: TextStyle(color: AppColors.success, fontSize: 11, fontWeight: FontWeight.w700)),
+                                decoration: BoxDecoration(
+                                  color: AppColors.successBg,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: const Text(
+                                  'Ativo',
+                                  style: TextStyle(color: AppColors.success, fontSize: 11, fontWeight: FontWeight.w700),
+                                ),
                               ),
                             ],
                           ),
@@ -254,14 +311,52 @@ class _TenantsPageState extends State<TenantsPage> {
           // Header
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-            decoration: const BoxDecoration(color: Color(0xFFF8FAFC), borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
+            decoration: const BoxDecoration(
+              color: Color(0xFFF8FAFC),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            ),
             child: const Row(
               children: [
-                Expanded(flex: 3, child: Text('EMPRESA', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textGrey, letterSpacing: 0.8))),
-                Expanded(flex: 2, child: Text('CNPJ', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textGrey))),
-                Expanded(flex: 1, child: Text('PLANO', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textGrey))),
-                Expanded(flex: 1, child: Text('STATUS', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textGrey))),
-                SizedBox(width: 40, child: Text('AÇÕES', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textGrey))),
+                Expanded(
+                  flex: 3,
+                  child: Text(
+                    'EMPRESA',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textGrey,
+                      letterSpacing: 0.8,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    'CNPJ',
+                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textGrey),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Text(
+                    'PLANO',
+                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textGrey),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Text(
+                    'STATUS',
+                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textGrey),
+                  ),
+                ),
+                SizedBox(
+                  width: 40,
+                  child: Text(
+                    'AÇÕES',
+                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textGrey),
+                  ),
+                ),
               ],
             ),
           ),
@@ -273,7 +368,7 @@ class _TenantsPageState extends State<TenantsPage> {
               itemBuilder: (context, index) {
                 final tenant = filtered[index];
                 return InkWell(
-                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => DetalheTenantPage(tenant: tenant))),
+                  onTap: () => showTenantDetalheModal(context, tenant),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                     child: Row(
@@ -285,38 +380,79 @@ class _TenantsPageState extends State<TenantsPage> {
                               Container(
                                 width: 36,
                                 height: 36,
-                                decoration: BoxDecoration(color: _getAvatarColor(tenant.nome), borderRadius: BorderRadius.circular(8)),
-                                child: Center(child: Text(_getInitials(tenant.nome), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 13))),
+                                decoration: BoxDecoration(
+                                  color: _getAvatarColor(tenant.nome),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    _getInitials(tenant.nome),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ),
                               ),
                               const SizedBox(width: 12),
-                              Expanded(child: Text(tenant.nome, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14))),
+                              Expanded(
+                                child: Text(
+                                  tenant.nome,
+                                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                                ),
+                              ),
                             ],
                           ),
                         ),
-                        Expanded(flex: 2, child: Text(_formatCnpj(tenant.cnpj), style: const TextStyle(fontSize: 13, color: AppColors.textGrey))),
                         Expanded(
-                          flex: 1,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(color: AppColors.primaryLight, borderRadius: BorderRadius.circular(6)),
-                            child: const Text('Premium', style: TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.w600)),
+                          flex: 2,
+                          child: Text(
+                            _formatCnpj(tenant.cnpj),
+                            style: const TextStyle(fontSize: 13, color: AppColors.textGrey),
                           ),
                         ),
                         Expanded(
                           flex: 1,
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(color: AppColors.successBg, borderRadius: BorderRadius.circular(20)),
-                            child: const Row(mainAxisSize: MainAxisSize.min, children: [
-                              Icon(Icons.circle, size: 8, color: AppColors.success),
-                              SizedBox(width: 4),
-                              Text('Ativa', style: TextStyle(color: AppColors.success, fontSize: 11, fontWeight: FontWeight.w700)),
-                            ]),
+                            decoration: BoxDecoration(
+                              color: AppColors.primaryLight,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: const Text(
+                              'Premium',
+                              style: TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: AppColors.successBg,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.circle, size: 8, color: AppColors.success),
+                                SizedBox(width: 4),
+                                Text(
+                                  'Ativa',
+                                  style: TextStyle(color: AppColors.success, fontSize: 11, fontWeight: FontWeight.w700),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         SizedBox(
                           width: 40,
-                          child: IconButton(icon: const Icon(Icons.more_horiz, size: 18, color: AppColors.textGrey), onPressed: () {}),
+                          child: IconButton(
+                            icon: const Icon(Icons.more_horiz, size: 18, color: AppColors.textGrey),
+                            onPressed: () {},
+                          ),
                         ),
                       ],
                     ),

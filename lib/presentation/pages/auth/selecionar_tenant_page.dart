@@ -6,6 +6,7 @@ import 'package:front_openerp/presentation/pages/auth/login_page.dart';
 import 'package:front_openerp/presentation/pages/home_page.dart';
 import 'package:front_openerp/presentation/providers/providers.dart';
 import 'package:provider/provider.dart';
+
 import '../../theme/app_colors.dart';
 import '../../theme/app_theme.dart';
 
@@ -23,8 +24,8 @@ class SelecionarTenantPage extends StatelessWidget {
     final nomeExibicao = primeiroConta?.nome.isNotEmpty == true
         ? primeiroConta!.nome
         : primeiroConta?.email.isNotEmpty == true
-            ? primeiroConta!.email
-            : usuario?.nome ?? usuario?.email ?? 'Usuário';
+        ? primeiroConta!.email
+        : usuario?.nome ?? usuario?.email ?? 'Usuário';
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -61,9 +62,15 @@ class SelecionarTenantPage extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Olá, $nomeExibicao!', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: Colors.white)),
+                            Text(
+                              'Olá, $nomeExibicao!',
+                              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: Colors.white),
+                            ),
                             const SizedBox(height: 4),
-                            Text('Você tem acesso a ${contas.length} empresa(s). Selecione qual deseja acessar:', style: const TextStyle(fontSize: 13, color: Colors.white70)),
+                            Text(
+                              'Você tem acesso a ${contas.length} empresa(s). Selecione qual deseja acessar:',
+                              style: const TextStyle(fontSize: 13, color: Colors.white70),
+                            ),
                           ],
                         ),
                       ),
@@ -71,19 +78,33 @@ class SelecionarTenantPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 24),
-                const Text('Empresas disponíveis', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14, color: AppColors.textDark)),
+                const Text(
+                  'Empresas disponíveis',
+                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14, color: AppColors.textDark),
+                ),
                 const SizedBox(height: 12),
                 Expanded(
                   child: isWeb
                       ? GridView.builder(
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 2.2, crossAxisSpacing: 12, mainAxisSpacing: 12),
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 2.2,
+                            crossAxisSpacing: 12,
+                            mainAxisSpacing: 12,
+                          ),
                           itemCount: contas.length,
-                          itemBuilder: (context, index) => _ContaCard(conta: contas[index], onTap: () => _selecionarEmpresa(context, contas[index].tenantId)),
+                          itemBuilder: (context, index) => _ContaCard(
+                            conta: contas[index],
+                            onTap: () => _selecionarEmpresa(context, contas[index].tenant.id),
+                          ),
                         )
                       : ListView.separated(
                           itemCount: contas.length,
                           separatorBuilder: (_, _) => const SizedBox(height: 12),
-                          itemBuilder: (context, index) => _ContaCard(conta: contas[index], onTap: () => _selecionarEmpresa(context, contas[index].tenantId)),
+                          itemBuilder: (context, index) => _ContaCard(
+                            conta: contas[index],
+                            onTap: () => _selecionarEmpresa(context, contas[index].tenant.id),
+                          ),
                         ),
                 ),
                 const SizedBox(height: 16),
@@ -97,8 +118,15 @@ class SelecionarTenantPage extends StatelessWidget {
                       }
                     },
                     icon: const Icon(Icons.logout, size: 18, color: AppColors.error),
-                    label: const Text('Sair', style: TextStyle(color: AppColors.error, fontWeight: FontWeight.w600)),
-                    style: OutlinedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 14), side: const BorderSide(color: Color(0xFFFECACA)), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                    label: const Text(
+                      'Sair',
+                      style: TextStyle(color: AppColors.error, fontWeight: FontWeight.w600),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      side: const BorderSide(color: Color(0xFFFECACA)),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
                   ),
                 ),
               ],
@@ -109,7 +137,20 @@ class SelecionarTenantPage extends StatelessWidget {
     );
   }
 
-  Future<void> _selecionarEmpresa(BuildContext context, int tenantId) async {
+  Future<void> _selecionarEmpresa(BuildContext context, int? tenantId) async {
+    if (tenantId == null) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Empresa inválida.'),
+            backgroundColor: AppColors.error,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+      return;
+    }
+
     final authProvider = context.read<AuthProvider>();
     final success = await authProvider.selectTenant(tenantId);
 
@@ -117,7 +158,11 @@ class SelecionarTenantPage extends StatelessWidget {
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const HomePage()));
     } else if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(authProvider.error ?? 'Erro ao selecionar empresa'), backgroundColor: AppColors.error, behavior: SnackBarBehavior.floating),
+        SnackBar(
+          content: Text(authProvider.error ?? 'Erro ao selecionar empresa'),
+          backgroundColor: AppColors.error,
+          behavior: SnackBarBehavior.floating,
+        ),
       );
     }
   }
@@ -153,7 +198,10 @@ class _ContaCard extends StatelessWidget {
                 decoration: BoxDecoration(color: _getColor(pessoa).withValues(alpha: 0.12), shape: BoxShape.circle),
                 child: Center(
                   child: pessoa.isNotEmpty
-                      ? Text(pessoa[0].toUpperCase(), style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: _getColor(pessoa)))
+                      ? Text(
+                          pessoa[0].toUpperCase(),
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: _getColor(pessoa)),
+                        )
                       : Icon(Icons.business, color: _getColor(pessoa)),
                 ),
               ),
@@ -162,16 +210,26 @@ class _ContaCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Empresa #${conta.tenantId}', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
+                    Text(
+                      '${conta.tenant.id} - ${conta.tenant.nome}',
+                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                    ),
                     const SizedBox(height: 2),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(color: AppColors.primaryLight, borderRadius: BorderRadius.circular(20)),
-                      child: Text(conta.roleLabel, style: const TextStyle(fontSize: 11, color: AppColors.primary, fontWeight: FontWeight.w600)),
+                      child: Text(
+                        conta.roleLabel,
+                        style: const TextStyle(fontSize: 11, color: AppColors.primary, fontWeight: FontWeight.w600),
+                      ),
                     ),
                     if (conta.email.isNotEmpty) ...[
                       const SizedBox(height: 4),
-                      Text(conta.email, style: const TextStyle(fontSize: 11, color: AppColors.textGrey), overflow: TextOverflow.ellipsis),
+                      Text(
+                        conta.email,
+                        style: const TextStyle(fontSize: 11, color: AppColors.textGrey),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ],
                   ],
                 ),

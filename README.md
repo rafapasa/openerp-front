@@ -34,3 +34,7 @@ make release
 
 # Servir build web localmente
 make serve
+
+# git 
+branch de desenvolvimento >> dev
+branch de produção >> main

@@ -131,6 +131,47 @@ class ProdutoRepository {
     }
   }
 
+  Future<ProdutoModel> createProduto(Map<String, dynamic> body) async {
+    final criado = await _produtoService.createProduto(body);
+    await LocalStorage.clearCache(LocalStorage.produtosKey);
+    return criado;
+  }
+
+  Future<ProdutoModel> updateProduto(int id, Map<String, dynamic> body) async {
+    final atualizado = await _produtoService.updateProduto(id, body);
+    await LocalStorage.clearCache(LocalStorage.produtosKey);
+    return atualizado;
+  }
+
+  Future<void> deleteProduto(int id) async {
+    await _produtoService.deleteProduto(id);
+    await LocalStorage.clearCache(LocalStorage.produtosKey);
+  }
+
+  Future<void> toggleDisponibilidade(int id, bool disponivel) async {
+    await _produtoService.toggleDisponibilidade(id, disponivel);
+    await LocalStorage.clearCache(LocalStorage.produtosKey);
+  }
+
+  // ============================================================
+  // 🔤 Tokens do produto
+  // ============================================================
+  Future<List<ProdutoTokenModel>> listarTokens(int produtoId) {
+    return _produtoService.listarTokens(produtoId);
+  }
+
+  Future<List<ProdutoTokenModel>> criarTokens(int produtoId, List<ProdutoTokenModel> tokens) {
+    return _produtoService.criarTokens(produtoId, tokens);
+  }
+
+  Future<List<ProdutoTokenModel>> atualizarTokens(int produtoId, List<ProdutoTokenModel> tokens) {
+    return _produtoService.atualizarTokens(produtoId, tokens);
+  }
+
+  Future<void> excluirTokens(int produtoId, List<int> ids) {
+    return _produtoService.excluirTokens(produtoId, ids);
+  }
+
   // ============================================================
   // 🗑️ Limpar cache
   // ============================================================

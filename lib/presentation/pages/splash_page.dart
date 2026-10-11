@@ -6,6 +6,7 @@ import 'package:front_openerp/presentation/pages/auth/selecionar_tenant_page.dar
 import 'package:front_openerp/presentation/pages/home_page.dart';
 import 'package:front_openerp/presentation/providers/providers.dart';
 import 'package:provider/provider.dart';
+
 import '../theme/app_colors.dart';
 
 class SplashPage extends StatefulWidget {
@@ -53,68 +54,83 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [AppColors.primaryDark, AppColors.primary, Color(0xFF2A6ACF)],
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.asset(
+            'assets/images/img_splash.jpg',
+            fit: BoxFit.cover,
+            errorBuilder: (_, _, _) => Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [AppColors.primaryDark, AppColors.primary, Color(0xFF2A6ACF)],
+                ),
+              ),
+            ),
           ),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Logo eTools
-              Container(
-                width: 140,
-                height: 140,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(28),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.2),
-                      blurRadius: 20,
-                      offset: const Offset(0, 8),
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(16),
-                child: Image.asset(
-                  'assets/Icone_azul_500x500.png',
-                  errorBuilder: (_, _, _) => const Icon(Icons.bolt, size: 60, color: AppColors.primary),
-                ),
-              ),
-              const SizedBox(height: 28),
-              const Text(
-                'OpenERP',
-                style: TextStyle(fontSize: 32, fontWeight: FontWeight.w900, color: Colors.white, letterSpacing: 0.5),
-              ),
-              const SizedBox(height: 4),
-              Row(
+          Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('ERPCloud', style: TextStyle(fontSize: 14, color: Colors.white70, fontWeight: FontWeight.w600, letterSpacing: 1.5)),
-                  const SizedBox(width: 8),
-                  Container(width: 4, height: 4, decoration: const BoxDecoration(color: AppColors.accent, shape: BoxShape.circle)),
-                  const SizedBox(width: 8),
-                  const Text('by eTools', style: TextStyle(fontSize: 14, color: AppColors.accent, fontWeight: FontWeight.w700)),
+                  Container(
+                    width: 120,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(28),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.2),
+                          blurRadius: 20,
+                          offset: const Offset(0, 8),
+                        ),
+                      ],
+                    ),
+                    padding: const EdgeInsets.all(16),
+                    child: Image.asset(
+                      'assets/images/Icone_azul_500x500.png',
+                      errorBuilder: (_, _, _) => const Icon(Icons.bolt, size: 60, color: AppColors.primary),
+                    ),
+                  ),
+                  const SizedBox(height: 28),
+                  const Text(
+                    'OpenERP',
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  const Text(
+                    'Soluções inteligentes para sua empresa.',
+                    style: TextStyle(fontSize: 13, color: Colors.white60),
+                  ),
+                  const SizedBox(height: 24),
+                  const SizedBox(
+                    width: 32,
+                    height: 32,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 3,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'v3.2.1 • eTools Tecnologia',
+                    style: TextStyle(fontSize: 11, color: Colors.white.withValues(alpha: 0.5)),
+                  ),
                 ],
               ),
-              const SizedBox(height: 12),
-              const Text('Soluções inteligentes para sua empresa.', style: TextStyle(fontSize: 13, color: Colors.white60)),
-              const SizedBox(height: 56),
-              const SizedBox(
-                width: 32,
-                height: 32,
-                child: CircularProgressIndicator(strokeWidth: 3, valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),
-              ),
-              const SizedBox(height: 16),
-              Text('v3.2.1 • eTools Tecnologia', style: TextStyle(fontSize: 11, color: Colors.white.withValues(alpha: 0.5))),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

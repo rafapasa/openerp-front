@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:front_openerp/data/repositories/repositories.dart';
 import 'package:front_openerp/data/repositories/tenant_repository.dart';
+import 'package:front_openerp/data/services/categoria_service.dart';
 import 'package:front_openerp/data/services/services.dart';
 import 'package:front_openerp/data/services/tenant_service.dart';
 import 'package:front_openerp/presentation/pages/pages.dart';
@@ -31,6 +32,8 @@ Widget buildApp() {
       Provider<ClienteService>(create: (context) => ClienteService(context.read<ApiService>())),
       Provider<ProdutoService>(create: (context) => ProdutoService(context.read<ApiService>())),
       Provider<TenantService>(create: (context) => TenantService(context.read<ApiService>())),
+      Provider<UsoService>(create: (context) => UsoService(context.read<ApiService>())),
+      Provider<CategoriaService>(create: (context) => CategoriaService(context.read<ApiService>())),
 
       // Repositories
       Provider<AuthRepository>(create: (context) => AuthRepository(context.read<AuthService>())),
