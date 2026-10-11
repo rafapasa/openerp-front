@@ -7,6 +7,7 @@ import 'package:front_openerp/core/helpers/json_helper.dart';
 /// - uso: token vindo do uso (ex.: gripe, resfriado)
 enum ProdutoTokenOrigem {
   nome,
+  modelo,
   abrev,
   ano,
   uso;
@@ -25,6 +26,8 @@ enum ProdutoTokenOrigem {
     switch (this) {
       case ProdutoTokenOrigem.nome:
         return 'Nome';
+      case ProdutoTokenOrigem.modelo:
+        return 'Modelo';
       case ProdutoTokenOrigem.abrev:
         return 'Abrev';
       case ProdutoTokenOrigem.ano:

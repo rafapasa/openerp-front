@@ -12,11 +12,9 @@ class _TokenRow {
   ProdutoTokenOrigem origem;
   bool removido;
 
-  _TokenRow({
-    this.id,
-    required String token,
-    this.origem = ProdutoTokenOrigem.nome,
-  }) : removido = false, tokenCtrl = TextEditingController(text: token);
+  _TokenRow({this.id, required String token, this.origem = ProdutoTokenOrigem.nome})
+    : removido = false,
+      tokenCtrl = TextEditingController(text: token);
 
   factory _TokenRow.fromModel(ProdutoTokenModel m) => _TokenRow(id: m.id, token: m.token, origem: m.origem);
 
@@ -331,9 +329,7 @@ class _ProdutoTokenTabState extends State<ProdutoTokenTab> {
                 isDense: true,
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 alignment: Alignment.centerLeft,
-                items: ProdutoTokenOrigem.values
-                    .map((o) => DropdownMenuItem(value: o, child: Text(o.label)))
-                    .toList(),
+                items: ProdutoTokenOrigem.values.map((o) => DropdownMenuItem(value: o, child: Text(o.label))).toList(),
                 onChanged: _salvando ? null : (v) => setState(() => row.origem = v ?? ProdutoTokenOrigem.nome),
               ),
             ),
