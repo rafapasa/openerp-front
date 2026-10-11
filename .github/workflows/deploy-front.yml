@@ -6,7 +6,7 @@
 #   DOCKERHUB_TOKEN
 #
 # Runner: actions/runner na VM ARM, labels: [self-hosted, linux, ARM64, oci, front]
-#   https://github.com/rafapasa/front-openerp/settings/actions/runners
+#   https://github.com/rafapasa/openerp-front/settings/actions/runners
 #
 name: Deploy Frontend
 

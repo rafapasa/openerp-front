@@ -1,8 +1,8 @@
 services:
-  openerp-web-teste:
-    image: ${DOCKER_USERNAME:-rafapasa}/openerp-web:${IMAGE_TAG:-test}
-    container_name: openerp-web-teste
-    hostname: openerp-web-teste
+  openerp-front-teste:
+    image: ${DOCKER_USERNAME:-rafapasa}/openerp-front:${IMAGE_TAG:-test}
+    container_name: openerp-front-teste
+    hostname: openerp-front-teste
     restart: unless-stopped
     ports:
       - "${WEB_PORT:-8083}:80"

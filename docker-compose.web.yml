@@ -1,8 +1,8 @@
 services:
-  openerp-web:
-    image: ${DOCKER_USERNAME:-rafapasa}/openerp-web:${IMAGE_TAG:-latest}
-    container_name: openerp-web
-    hostname: openerp-web
+  openerp-front:
+    image: ${DOCKER_USERNAME:-rafapasa}/openerp-front:${IMAGE_TAG:-latest}
+    container_name: openerp-front
+    hostname: openerp-front
     restart: unless-stopped
     ports:
       # Proxy do host openerp.etoolstec.com.br → esta porta
