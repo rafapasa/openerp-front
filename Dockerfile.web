@@ -1,0 +1,13 @@
+# ================================================================
+# Front OpenERP — nginx linux/arm64
+# Flutter SDK em Docker é amd64 (Cirrus). Aqui só empacota build/web.
+# make build-push roda `flutter build web` no host e depois este file.
+# ================================================================
+
+FROM --platform=linux/arm64 nginx:1.27-alpine
+COPY nginx.web.conf /etc/nginx/conf.d/default.conf
+COPY build/web /usr/share/nginx/html
+EXPOSE 80
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+  CMD wget -qO- http://127.0.0.1/healthz || exit 1
+CMD ["nginx", "-g", "daemon off;"]

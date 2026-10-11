@@ -1,0 +1,16 @@
+services:
+  openerp-web:
+    image: ${DOCKER_USERNAME:-rafapasa}/openerp-web:${IMAGE_TAG:-latest}
+    container_name: openerp-web
+    hostname: openerp-web
+    restart: unless-stopped
+    ports:
+      # Proxy do host openerp.etoolstec.com.br → esta porta
+      - "${WEB_PORT:-8081}:80"
+    networks:
+      - mcp-network
+
+networks:
+  mcp-network:
+    external: true
+    name: mcp-network

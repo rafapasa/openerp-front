@@ -297,4 +297,51 @@ git-up: ## Add commit e push das alterações no git
         analyze test test-coverage format \
         dev watch gen gen-watch serve \
         setup env logs pub-cache release \
-		git-up	
+		git-up
+
+
+# ============================================================
+# DEPLOY OCI — openerp.etoolstec.com.br
+# Mesmo modelo do back: build-push exige tag; deploy assume latest
+# ============================================================
+
+DOCKER_USERNAME := rafapasa
+IMAGE_TAG       ?= latest
+WEB_IMAGE       := $(DOCKER_USERNAME)/openerp-web
+DOCKERFILE_WEB  := Dockerfile.web
+COMPOSE_WEB     := docker-compose.web.yml
+NO_CACHE        ?=
+
+.PHONY: login build-push deploy logs-web
+
+login: ## docker login no Hub
+	docker login -u $(DOCKER_USERNAME)
+
+build-push: ## flutter build web no host + image nginx linux/arm64 (IMAGE_TAG=x.y.z)
+ifeq ($(IMAGE_TAG),latest)
+	$(error Use: make build-push IMAGE_TAG=0.1.0 — não pode buildar só latest)
+endif
+	@echo "$(BLUE)🌐 flutter build web --release$(NC)"
+	$(FLUTTER) build web --release --no-wasm-dry-run
+	@test -f build/web/index.html || (echo "$(RED)falhou: build/web/index.html$(NC)"; exit 1)
+	@echo "$(BLUE)🐳 Build ARM64 $(WEB_IMAGE):$(IMAGE_TAG) + latest$(NC)"
+	DOCKER_BUILDKIT=1 docker build $(NO_CACHE) \
+		--platform linux/arm64 \
+		-f $(DOCKERFILE_WEB) \
+		-t $(WEB_IMAGE):$(IMAGE_TAG) \
+		-t $(WEB_IMAGE):latest \
+		.
+	docker push $(WEB_IMAGE):$(IMAGE_TAG)
+	docker push $(WEB_IMAGE):latest
+	@echo "$(GREEN)✅ $(WEB_IMAGE):$(IMAGE_TAG) + latest (linux/arm64) no Hub$(NC)"
+
+deploy: ## Sobe openerp-web na mcp-network (IMAGE_TAG opcional, default latest)
+	@echo "$(BLUE)🚀 Deploy $(WEB_IMAGE):$(IMAGE_TAG) → openerp.etoolstec.com.br$(NC)"
+	docker network create mcp-network || true
+	IMAGE_TAG=$(IMAGE_TAG) docker compose -f $(COMPOSE_WEB) pull openerp-web
+	IMAGE_TAG=$(IMAGE_TAG) docker compose -f $(COMPOSE_WEB) up -d --pull always --no-deps openerp-web
+	@docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" | grep openerp-web || true
+	@echo "$(GREEN)✅ openerp-web no ar$(NC)"
+
+logs-web: ## Logs do container openerp-web
+	docker logs -f openerp-web --tail=100
