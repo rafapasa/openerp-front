@@ -163,7 +163,7 @@ git-restore-dash: ## Restaurar dashboard
 
 DOCKER_USERNAME ?= rafapasa
 IMAGE_TAG       ?= latest
-WEB_IMAGE       := $(DOCKER_USERNAME)/openerp-web
+WEB_IMAGE       := $(DOCKER_USERNAME)/openerp-front
 DOCKERFILE_WEB  := Dockerfile.web
 COMPOSE_WEB     := docker-compose.web.yml
 NO_CACHE        ?= --no-cache
@@ -192,9 +192,9 @@ endif
 deploy: ## Sobe openerp-web na mcp-network
 	@echo "🚀 Deploy $(WEB_IMAGE):$(IMAGE_TAG) → openerp.etoolstec.com.br"
 	docker network create mcp-network || true
-	IMAGE_TAG=$(IMAGE_TAG) DOCKER_USERNAME=$(DOCKER_USERNAME) docker compose -f $(COMPOSE_WEB) pull openerp-web
+	IMAGE_TAG=$(IMAGE_TAG) DOCKER_USERNAME=$(DOCKER_USERNAME) docker compose -f $(COMPOSE_WEB) pull openerp-front
 	IMAGE_TAG=$(IMAGE_TAG) DOCKER_USERNAME=$(DOCKER_USERNAME) docker compose -f $(COMPOSE_WEB) up -d --pull always --no-deps openerp-web
-	@docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" | grep openerp-web || true
+	@docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" | grep openerp-front || true
 	@echo "✅ openerp-web no ar"
 
 
@@ -216,17 +216,17 @@ build-push-t: ## Flutter build web (API teste) + docker ARM64 + push :test
 deploy-t: ## Sobe openerp-web-teste na mcp-network (porta 8083)
 	@echo "🚀 Deploy $(WEB_IMAGE):test (API $(API_BASE_URL_DEV))"
 	IMAGE_TAG=test DOCKER_USERNAME=$(DOCKER_USERNAME) WEB_PORT=8083 \
-		docker compose -f $(COMPOSE_WEB_TESTE) pull openerp-web-teste
+		docker compose -f $(COMPOSE_WEB_TESTE) pull openerp-front-teste
 	IMAGE_TAG=test DOCKER_USERNAME=$(DOCKER_USERNAME) WEB_PORT=8083 \
-		docker compose -f $(COMPOSE_WEB_TESTE) up -d --pull always --no-deps openerp-web-teste
-	@docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" | grep openerp-web-teste || true
-	@echo "✅ openerp-web-teste no ar (host:8083 → nginx :80)"
+		docker compose -f $(COMPOSE_WEB_TESTE) up -d --pull always --no-deps openerp-front-teste
+	@docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" | grep openerp-front-teste || true
+	@echo "✅ openerp-front-teste no ar (host:8083 → nginx :80)"
 
 logs-web-teste: ## Logs do container de teste
-	docker logs -f openerp-web-teste --tail=100
+	docker logs -f openerp-front-teste --tail=100
 
 logs-web: ## Logs do container
-	docker logs -f openerp-web --tail=100
+	docker logs -f openerp-front --tail=100
 
 .PHONY: help run run-web run-web-ssh run-linux run-android run-ios run-profile run-release \
         build build-web build-apk build-appbundle build-linux \
