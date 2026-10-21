@@ -180,18 +180,16 @@ class _ProdutosPageState extends State<ProdutosPage> {
 
   Widget _buildLista(ProdutoProvider provider) {
     return ListView.separated(
-      controller: _scrollController,
-      padding: const EdgeInsets.all(16),
-      itemCount: provider.produtos.length + (provider.hasMore ? 1 : 0),
-      separatorBuilder: (_, _) => const SizedBox(height: 10),
+      padding: const EdgeInsets.all(12),
+      itemCount: provider.produtos.length,
+      separatorBuilder: (_, _) => const Divider(height: 1),
       itemBuilder: (_, i) {
-        if (i == provider.produtos.length) {
-          return const Padding(
-            padding: EdgeInsets.symmetric(vertical: 16),
-            child: Center(child: CircularProgressIndicator(color: AppColors.primary)),
-          );
-        }
-        return _ProdutoLinha(produto: provider.produtos[i]);
+        final p = provider.produtos[i];
+        return ListTile(
+          title: Text(p.nome, maxLines: 1, overflow: TextOverflow.ellipsis),
+          subtitle: Text(p.preco.toStringAsFixed(2)),
+          trailing: Text(p.disponivel ? 'Disponível' : 'Indisponível'),
+        );
       },
     );
   }
@@ -233,142 +231,6 @@ class _ProdutosPageState extends State<ProdutosPage> {
         }
         return _ProdutoCard(produto: provider.produtos[index]);
       },
-    );
-  }
-}
-
-/// Linha da listagem (modo Lista) - segue o padrao visual do sistema
-/// e abre o modal de detalhe do produto, igual ao modo Card.
-class _ProdutoLinha extends StatelessWidget {
-  final ProdutoModel produto;
-  const _ProdutoLinha({required this.produto});
-
-  Future<void> _excluir(BuildContext context) async {
-    final confirm = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Excluir produto?'),
-        content: Text(produto.nome),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancelar')),
-          FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: AppColors.error),
-            onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Excluir'),
-          ),
-        ],
-      ),
-    );
-    if (confirm != true) return;
-    if (!context.mounted) return;
-    final ok = await context.read<ProdutoProvider>().deleteProduto(produto.id);
-    if (!context.mounted) return;
-    if (!ok) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(context.read<ProdutoProvider>().error ?? 'Erro ao excluir')));
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final numberFormat = NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
-
-    return Container(
-      decoration: AppTheme.cardDecoration,
-      child: InkWell(
-        onTap: () => showProdutoDetalheModal(context, produto.id),
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-          child: Row(
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(color: AppColors.primaryLight, borderRadius: BorderRadius.circular(10)),
-                child: const Icon(Icons.inventory_2_outlined, color: AppColors.primary, size: 20),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      produto.nome,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.textDark),
-                    ),
-                    const SizedBox(height: 2),
-                    Row(
-                      children: [
-                        if (produto.categoriaNome != null) ...[
-                          Flexible(
-                            child: Text(
-                              produto.categoriaNome!,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                fontSize: 11,
-                                color: AppColors.textGrey,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                        ],
-                        if (produto.descricao != null)
-                          Flexible(
-                            child: Text(
-                              produto.descricao!,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(fontSize: 11, color: AppColors.textGrey),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 12),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(
-                  color: produto.disponivel ? AppColors.successBg : const Color(0xFFFEF2F2),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  produto.disponivel ? 'Disponivel' : 'Indisponivel',
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w700,
-                    color: produto.disponivel ? AppColors.success : AppColors.error,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              SizedBox(
-                width: 100,
-                child: Text(
-                  numberFormat.format(produto.preco),
-                  textAlign: TextAlign.right,
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: AppColors.accent),
-                ),
-              ),
-              IconButton(
-                tooltip: 'Excluir',
-                icon: const Icon(Icons.delete_outline, size: 18, color: AppColors.error),
-                onPressed: () => _excluir(context),
-                visualDensity: VisualDensity.compact,
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
