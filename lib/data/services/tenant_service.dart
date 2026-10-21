@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:openerp_front/core/config/api_config.dart';
 import 'package:openerp_front/core/helpers/json_helper.dart';
 import 'package:openerp_front/data/models/tenant_llm_config.dart';
 import 'package:openerp_front/data/models/tenant_model.dart';
@@ -74,6 +75,18 @@ class TenantService {
       }
     } catch (e) {
       throw Exception('Erro ao excluir empresa: $e');
+    }
+  }
+
+  /// Transfere o WhatsApp de teste para este tenant (só dev).
+  /// Endpoint fora de /api/v1: POST /dev/tenant/switch
+  Future<Map<String, dynamic>> usarComoWebhook(int tenantId) async {
+    try {
+      final url = Uri.parse(ApiConfig.baseUrl).replace(path: '/dev/tenant/switch').toString();
+      final response = await _api.post(url, data: {'tenant_id': tenantId});
+      return _asMap(response.data);
+    } catch (e) {
+      throw Exception('Erro ao usar como webhook: $e');
     }
   }
 

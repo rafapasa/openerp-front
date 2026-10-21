@@ -1,6 +1,8 @@
 // lib/presentation/pages/tenants/tenants_page.dart
 // Refatorado eTools - Responsivo Web (tabela) + Mobile (cards)
 import 'package:flutter/material.dart';
+import 'package:openerp_front/core/config/api_config.dart';
+import 'package:openerp_front/data/models/tenant_model.dart';
 import 'package:openerp_front/presentation/pages/tenants/tenant_detalhe_modal.dart';
 import 'package:openerp_front/presentation/pages/tenants/form_tenant_page.dart';
 import 'package:openerp_front/presentation/providers/tenant_provider.dart';
@@ -53,6 +55,66 @@ class _TenantsPageState extends State<TenantsPage> {
     return '${cnpj.substring(0, 2)}.${cnpj.substring(2, 5)}.${cnpj.substring(5, 8)}/${cnpj.substring(8, 12)}-${cnpj.substring(12, 14)}';
   }
 
+  Future<void> _usarComoWebhook(TenantModel tenant) async {
+    final id = tenant.id;
+    if (id == null) return;
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Usar como webhook'),
+        content: Text(
+          'Apontar o WhatsApp de teste para "${tenant.nome}"?\n'
+          'Mensagens do número de teste passarão a cair nesta empresa.',
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancelar')),
+          FilledButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Confirmar')),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+
+    final provider = context.read<TenantProvider>();
+    final phone = await provider.usarComoWebhook(id);
+    if (!mounted) return;
+
+    if (phone != null || provider.error == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            phone != null && phone.isNotEmpty
+                ? 'Webhook ativo em "${tenant.nome}" ($phone)'
+                : 'Webhook ativo em "${tenant.nome}"',
+          ),
+          backgroundColor: AppColors.success,
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(provider.error ?? 'Falha ao apontar webhook'), backgroundColor: Colors.red[700]),
+      );
+    }
+  }
+
+  Widget _acoesMenu(TenantModel tenant) {
+    if (!ApiConfig.isDev) {
+      return const SizedBox(width: 40);
+    }
+    return PopupMenuButton<String>(
+      icon: const Icon(Icons.more_horiz, size: 18, color: AppColors.textGrey),
+      onSelected: (value) {
+        if (value == 'webhook') _usarComoWebhook(tenant);
+      },
+      itemBuilder: (_) => [
+        const PopupMenuItem(
+          value: 'webhook',
+          child: Row(children: [Icon(Icons.webhook_outlined, size: 18), SizedBox(width: 8), Text('Usar como webhook')]),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isWeb = MediaQuery.of(context).size.width > 800;
@@ -65,7 +127,7 @@ class _TenantsPageState extends State<TenantsPage> {
             return const Center(child: CircularProgressIndicator(color: AppColors.primary));
           }
 
-          if (provider.error != null) {
+          if (provider.error != null && provider.tenants.isEmpty) {
             return Center(
               child: Padding(
                 padding: const EdgeInsets.all(24),
@@ -223,7 +285,7 @@ class _TenantsPageState extends State<TenantsPage> {
     );
   }
 
-  Widget _buildMobileList(List filtered) {
+  Widget _buildMobileList(List<TenantModel> filtered) {
     return RefreshIndicator(
       color: AppColors.primary,
       onRefresh: () => context.read<TenantProvider>().carregarTenants(),
@@ -291,7 +353,7 @@ class _TenantsPageState extends State<TenantsPage> {
                         ],
                       ),
                     ),
-                    const Icon(Icons.chevron_right, color: AppColors.border),
+                    _acoesMenu(tenant),
                   ],
                 ),
               ),
@@ -302,7 +364,7 @@ class _TenantsPageState extends State<TenantsPage> {
     );
   }
 
-  Widget _buildWebTable(List filtered) {
+  Widget _buildWebTable(List<TenantModel> filtered) {
     return Container(
       margin: const EdgeInsets.only(top: 16),
       decoration: AppTheme.cardDecoration,
@@ -351,7 +413,7 @@ class _TenantsPageState extends State<TenantsPage> {
                   ),
                 ),
                 SizedBox(
-                  width: 40,
+                  width: 48,
                   child: Text(
                     'AÇÕES',
                     style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textGrey),
@@ -447,13 +509,7 @@ class _TenantsPageState extends State<TenantsPage> {
                             ),
                           ),
                         ),
-                        SizedBox(
-                          width: 40,
-                          child: IconButton(
-                            icon: const Icon(Icons.more_horiz, size: 18, color: AppColors.textGrey),
-                            onPressed: () {},
-                          ),
-                        ),
+                        SizedBox(width: 48, child: _acoesMenu(tenant)),
                       ],
                     ),
                   ),

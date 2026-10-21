@@ -53,6 +53,10 @@ class TenantRepository {
     }
   }
 
+  Future<Map<String, dynamic>> usarComoWebhook(int tenantId) {
+    return _service.usarComoWebhook(tenantId);
+  }
+
   Future<List<TenantNotificacaoModel>> listarNotificacoes(int tenantId) {
     return _service.listarNotificacoes(tenantId);
   }

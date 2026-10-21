@@ -99,6 +99,22 @@ class TenantProvider extends ChangeNotifier {
     }
   }
 
+  /// Aponta o WhatsApp de teste para [tenantId]. Só funciona em ambiente dev no backend.
+  Future<String?> usarComoWebhook(int tenantId) async {
+    try {
+      final result = await _repository.usarComoWebhook(tenantId);
+      _error = null;
+      // Atualiza lista para refletir phone_id movido
+      await carregarTenants();
+      final phone = result['whatsapp_display_number'] ?? result['whatsapp_phone_id'] ?? '';
+      return phone.toString().isEmpty ? null : phone.toString();
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+      return null;
+    }
+  }
+
   Future<void> selecionarTenant(int id) async {
     try {
       _selectedTenant = await _repository.getById(id);
