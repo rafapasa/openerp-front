@@ -21,6 +21,7 @@ class TenantsPage extends StatefulWidget {
 class _TenantsPageState extends State<TenantsPage> {
   final _searchController = TextEditingController();
   String _searchQuery = '';
+  int? _switchingId;
 
   @override
   void initState() {
@@ -57,15 +58,15 @@ class _TenantsPageState extends State<TenantsPage> {
 
   Future<void> _usarComoWebhook(TenantModel tenant) async {
     final id = tenant.id;
-    if (id == null) return;
+    if (id == null || _switchingId != null) return;
 
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Usar como webhook'),
         content: Text(
-          'Apontar o WhatsApp de teste para "${tenant.nome}"?\n'
-          'Mensagens do número de teste passarão a cair nesta empresa.',
+          'Apontar o WhatsApp de teste para "${tenant.nome}"?\n\n'
+          'Mensagens do número de teste passam a cair nesta empresa.',
         ),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancelar')),
@@ -75,11 +76,13 @@ class _TenantsPageState extends State<TenantsPage> {
     );
     if (confirmed != true || !mounted) return;
 
+    setState(() => _switchingId = id);
     final provider = context.read<TenantProvider>();
     final phone = await provider.usarComoWebhook(id);
     if (!mounted) return;
+    setState(() => _switchingId = null);
 
-    if (phone != null || provider.error == null) {
+    if (provider.error == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
@@ -92,38 +95,49 @@ class _TenantsPageState extends State<TenantsPage> {
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(provider.error ?? 'Falha ao apontar webhook'), backgroundColor: Colors.red[700]),
+        SnackBar(
+          content: Text(provider.error ?? 'Falha ao apontar webhook'),
+          backgroundColor: Colors.red[700],
+        ),
       );
     }
   }
 
-  Widget _acoesMenu(TenantModel tenant) {
-    if (!ApiConfig.isDev) {
-      return const SizedBox(width: 40);
-    }
-    return PopupMenuButton<String>(
-      icon: const Icon(Icons.more_horiz, size: 18, color: AppColors.textGrey),
-      onSelected: (value) {
-        if (value == 'webhook') _usarComoWebhook(tenant);
-      },
-      itemBuilder: (_) => [
-        const PopupMenuItem(
-          value: 'webhook',
-          child: Row(children: [Icon(Icons.webhook_outlined, size: 18), SizedBox(width: 8), Text('Usar como webhook')]),
-        ),
-      ],
+  /// Botão direto (sem PopupMenu) — fora do InkWell da linha para não engolir o toque.
+  Widget _btnWebhook(TenantModel tenant) {
+    if (!ApiConfig.isDev) return const SizedBox.shrink();
+    final busy = _switchingId == tenant.id;
+    return TextButton.icon(
+      onPressed: busy ? null : () => _usarComoWebhook(tenant),
+      icon: busy
+          ? const SizedBox(
+              width: 14,
+              height: 14,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
+          : const Icon(Icons.swap_horiz, size: 16),
+      label: Text(
+        busy ? 'Trocando…' : 'Usar como webhook',
+        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+      ),
+      style: TextButton.styleFrom(
+        foregroundColor: AppColors.primary,
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        visualDensity: VisualDensity.compact,
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final isWeb = MediaQuery.of(context).size.width > 800;
+    final showWebhook = ApiConfig.isDev;
 
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Consumer<TenantProvider>(
         builder: (context, provider, child) {
-          if (provider.isLoading) {
+          if (provider.isLoading && provider.tenants.isEmpty) {
             return const Center(child: CircularProgressIndicator(color: AppColors.primary));
           }
 
@@ -166,7 +180,6 @@ class _TenantsPageState extends State<TenantsPage> {
             padding: EdgeInsets.zero,
             child: Column(
               children: [
-                // Toolbar
                 Container(
                   padding: EdgeInsets.all(isWeb ? 20 : 16),
                   decoration: isWeb ? AppTheme.cardDecoration : const BoxDecoration(color: Colors.white),
@@ -215,6 +228,13 @@ class _TenantsPageState extends State<TenantsPage> {
                               fontWeight: FontWeight.w500,
                             ),
                           ),
+                          if (showWebhook) ...[
+                            const SizedBox(width: 12),
+                            Text(
+                              '· dev: webhook',
+                              style: TextStyle(color: Colors.orange[700], fontSize: 12, fontWeight: FontWeight.w600),
+                            ),
+                          ],
                           const Spacer(),
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -238,7 +258,6 @@ class _TenantsPageState extends State<TenantsPage> {
                     ],
                   ),
                 ),
-                // Conteúdo
                 Expanded(
                   child: filtered.isEmpty
                       ? Center(
@@ -265,7 +284,7 @@ class _TenantsPageState extends State<TenantsPage> {
                           ),
                         )
                       : isWeb
-                      ? _buildWebTable(filtered)
+                      ? _buildWebTable(filtered, showWebhook)
                       : _buildMobileList(filtered),
                 ),
               ],
@@ -297,65 +316,87 @@ class _TenantsPageState extends State<TenantsPage> {
           final tenant = filtered[index];
           return Container(
             decoration: AppTheme.cardDecoration,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(16),
-              onTap: () => showTenantDetalheModal(context, tenant),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 52,
-                      height: 52,
-                      decoration: AppTheme.avatarDecoration(_getAvatarColor(tenant.nome)),
-                      child: Center(
-                        child: Text(
-                          _getInitials(tenant.nome),
-                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 18),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 14),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: () => showTenantDetalheModal(context, tenant),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: Row(
                         children: [
-                          Text(
-                            tenant.nome,
-                            style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                          Container(
+                            width: 52,
+                            height: 52,
+                            decoration: AppTheme.avatarDecoration(_getAvatarColor(tenant.nome)),
+                            child: Center(
+                              child: Text(
+                                _getInitials(tenant.nome),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ),
                           ),
-                          const SizedBox(height: 6),
-                          Row(
-                            children: [
-                              const Icon(Icons.badge_outlined, size: 14, color: AppColors.textGrey),
-                              const SizedBox(width: 4),
-                              Expanded(
-                                child: Text(
-                                  _formatCnpj(tenant.cnpj),
-                                  style: const TextStyle(color: AppColors.textGrey, fontSize: 12.5),
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  tenant.nome,
+                                  style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                decoration: BoxDecoration(
-                                  color: AppColors.successBg,
-                                  borderRadius: BorderRadius.circular(20),
+                                const SizedBox(height: 6),
+                                Row(
+                                  children: [
+                                    const Icon(Icons.badge_outlined, size: 14, color: AppColors.textGrey),
+                                    const SizedBox(width: 4),
+                                    Expanded(
+                                      child: Text(
+                                        _formatCnpj(tenant.cnpj),
+                                        style: const TextStyle(color: AppColors.textGrey, fontSize: 12.5),
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.successBg,
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: const Text(
+                                        'Ativo',
+                                        style: TextStyle(
+                                          color: AppColors.success,
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                child: const Text(
-                                  'Ativo',
-                                  style: TextStyle(color: AppColors.success, fontSize: 11, fontWeight: FontWeight.w700),
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    _acoesMenu(tenant),
+                  ),
+                  if (ApiConfig.isDev) ...[
+                    const SizedBox(height: 4),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: _btnWebhook(tenant),
+                    ),
                   ],
-                ),
+                ],
               ),
             ),
           );
@@ -364,22 +405,21 @@ class _TenantsPageState extends State<TenantsPage> {
     );
   }
 
-  Widget _buildWebTable(List<TenantModel> filtered) {
+  Widget _buildWebTable(List<TenantModel> filtered, bool showWebhook) {
     return Container(
       margin: const EdgeInsets.only(top: 16),
       decoration: AppTheme.cardDecoration,
       child: Column(
         children: [
-          // Header
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             decoration: const BoxDecoration(
               color: Color(0xFFF8FAFC),
               borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
             ),
-            child: const Row(
+            child: Row(
               children: [
-                Expanded(
+                const Expanded(
                   flex: 3,
                   child: Text(
                     'EMPRESA',
@@ -391,34 +431,35 @@ class _TenantsPageState extends State<TenantsPage> {
                     ),
                   ),
                 ),
-                Expanded(
+                const Expanded(
                   flex: 2,
                   child: Text(
                     'CNPJ',
                     style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textGrey),
                   ),
                 ),
-                Expanded(
+                const Expanded(
                   flex: 1,
                   child: Text(
                     'PLANO',
                     style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textGrey),
                   ),
                 ),
-                Expanded(
+                const Expanded(
                   flex: 1,
                   child: Text(
                     'STATUS',
                     style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textGrey),
                   ),
                 ),
-                SizedBox(
-                  width: 48,
-                  child: Text(
-                    'AÇÕES',
-                    style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textGrey),
+                if (showWebhook)
+                  const SizedBox(
+                    width: 160,
+                    child: Text(
+                      'AÇÕES',
+                      style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.textGrey),
+                    ),
                   ),
-                ),
               ],
             ),
           ),
@@ -429,14 +470,14 @@ class _TenantsPageState extends State<TenantsPage> {
               separatorBuilder: (_, _) => const Divider(height: 1, color: AppColors.borderLight),
               itemBuilder: (context, index) {
                 final tenant = filtered[index];
-                return InkWell(
-                  onTap: () => showTenantDetalheModal(context, tenant),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 3,
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: InkWell(
+                          onTap: () => showTenantDetalheModal(context, tenant),
                           child: Row(
                             children: [
                               Container(
@@ -467,51 +508,58 @@ class _TenantsPageState extends State<TenantsPage> {
                             ],
                           ),
                         ),
-                        Expanded(
-                          flex: 2,
-                          child: Text(
-                            _formatCnpj(tenant.cnpj),
-                            style: const TextStyle(fontSize: 13, color: AppColors.textGrey),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Text(
+                          _formatCnpj(tenant.cnpj),
+                          style: const TextStyle(fontSize: 13, color: AppColors.textGrey),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryLight,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: const Text(
+                            'Premium',
+                            style: TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.w600),
                           ),
                         ),
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryLight,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: const Text(
-                              'Premium',
-                              style: TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.w600),
-                            ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: AppColors.successBg,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.circle, size: 8, color: AppColors.success),
+                              SizedBox(width: 4),
+                              Text(
+                                'Ativa',
+                                style: TextStyle(color: AppColors.success, fontSize: 11, fontWeight: FontWeight.w700),
+                              ),
+                            ],
                           ),
                         ),
-                        Expanded(
-                          flex: 1,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: AppColors.successBg,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: const Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.circle, size: 8, color: AppColors.success),
-                                SizedBox(width: 4),
-                                Text(
-                                  'Ativa',
-                                  style: TextStyle(color: AppColors.success, fontSize: 11, fontWeight: FontWeight.w700),
-                                ),
-                              ],
-                            ),
+                      ),
+                      if (showWebhook)
+                        SizedBox(
+                          width: 160,
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: _btnWebhook(tenant),
                           ),
                         ),
-                        SizedBox(width: 48, child: _acoesMenu(tenant)),
-                      ],
-                    ),
+                    ],
                   ),
                 );
               },
