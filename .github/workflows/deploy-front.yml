@@ -83,5 +83,5 @@ jobs:
             sleep 5
           done
           echo "❌ Health check falhou — logs do container:"
-          docker logs openerp-web --tail=80 || true
+          docker logs openerp-front --tail=80 || true
           exit 1

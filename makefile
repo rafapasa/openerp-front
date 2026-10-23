@@ -1,9 +1,9 @@
 # ============================================================
-# Makefile para front-openerp
+# Makefile para openerp-front
 # Projeto Flutter - Dashboard Conversation Commerce
 # ============================================================
 
-PROJECT_NAME = front_openerp
+PROJECT_NAME = openerp_front
 FLUTTER ?= flutter
 DART ?= dart
 PUB = $(FLUTTER) pub
@@ -189,13 +189,13 @@ endif
 	docker push $(WEB_IMAGE):latest
 	@echo "✅ $(WEB_IMAGE):$(IMAGE_TAG) + latest (linux/arm64) no Hub"
 
-deploy: ## Sobe openerp-web na mcp-network
+deploy: ## Sobe openerp-front na mcp-network
 	@echo "🚀 Deploy $(WEB_IMAGE):$(IMAGE_TAG) → openerp.etoolstec.com.br"
 	docker network create mcp-network || true
 	IMAGE_TAG=$(IMAGE_TAG) DOCKER_USERNAME=$(DOCKER_USERNAME) docker compose -f $(COMPOSE_WEB) pull openerp-front
-	IMAGE_TAG=$(IMAGE_TAG) DOCKER_USERNAME=$(DOCKER_USERNAME) docker compose -f $(COMPOSE_WEB) up -d --pull always --no-deps openerp-web
+	IMAGE_TAG=$(IMAGE_TAG) DOCKER_USERNAME=$(DOCKER_USERNAME) docker compose -f $(COMPOSE_WEB) up -d --pull always --no-deps openerp-front
 	@docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" | grep openerp-front || true
-	@echo "✅ openerp-web no ar"
+	@echo "✅ openerp-front no ar"
 
 
 .PHONY: build-push-t
@@ -213,7 +213,7 @@ build-push-t: ## Flutter build web (API teste) + docker ARM64 + push :test
 	@echo "✅ $(WEB_IMAGE):test enviado (API $(API_BASE_URL_DEV))"
 
 .PHONY: deploy-t
-deploy-t: ## Sobe openerp-web-teste na mcp-network (porta 8083)
+deploy-t: ## Sobe openerp-front-teste na mcp-network (porta 8083)
 	@echo "🚀 Deploy $(WEB_IMAGE):test (API $(API_BASE_URL_DEV))"
 	IMAGE_TAG=test DOCKER_USERNAME=$(DOCKER_USERNAME) WEB_PORT=8083 \
 		docker compose -f $(COMPOSE_WEB_TESTE) pull openerp-front-teste
@@ -237,18 +237,3 @@ logs-web: ## Logs do container
         git-up git-status git-add git-commit git-push git-branch-6 git-restore-dash \
         login build-push deploy logs-web \
         build-push-t deploy-t logs-web-teste
-probe-emp:
-	ls lib/presentation/pages | head
-	find lib -iname '*empresa*' -o -iname '*tenant*' | head -40
-
-
-test-llm-tab:
-	export PATH="$$HOME/flutter/bin:$$PATH"; flutter test test/tenant_llm_config_test.dart
-	export PATH="$$HOME/flutter/bin:$$PATH"; dart analyze lib/data/models/tenant_llm_config.dart lib/data/models/tenant_model.dart lib/presentation/pages/tenants/tenant_llm_tab.dart lib/presentation/pages/tenants/tenant_detalhe_modal.dart
-
-commit-llm-tab:
-	export PATH="$$HOME/flutter/bin:$$PATH"; dart analyze lib/data/services/tenant_service.dart lib/data/repositories/tenant_repository.dart lib/presentation/providers/tenant_provider.dart
-	git add lib/data/models/tenant_llm_config.dart lib/data/models/tenant_model.dart lib/data/services/tenant_service.dart lib/data/repositories/tenant_repository.dart lib/presentation/providers/tenant_provider.dart lib/presentation/pages/tenants/tenant_llm_tab.dart lib/presentation/pages/tenants/tenant_detalhe_modal.dart test/tenant_llm_config_test.dart
-	git checkout -- makefile Makefile || true
-	git commit -m "feat(tenants): aba LLM no modal de empresa (#31)"
-	git push origin ciclo
